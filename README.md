@@ -1,2 +1,2 @@
-# template-library
-Template for NPM library.
+# cloud-router
+Router library for web worker based backends like CloudFlare Workers.
