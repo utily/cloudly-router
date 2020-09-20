@@ -1,0 +1,67 @@
+{
+ "name": "template-library",
+ "version": "0.0.0",
+ "description": "Template for NPM library",
+ "author": "PayFunc",
+ "license": "MIT",
+ "repository": "https://github.com/payfunc/template-library",
+ "bugs": {
+  "url": "https://github.com/payfunc/template-library/issues"
+ },
+ "homepage": "https://payfunc.com/open-source/template-library",
+ "private": false,
+ "main": "dist/index.js",
+ "typings": "dist/index.d.ts",
+ "git": {
+  "tagName": "v${version}"
+ },
+ "github": {
+  "release": true
+ },
+ "jest": {
+  "globals": {
+   "ts-jest": {
+    "tsConfig": "tsconfig.test.json"
+   }
+  },
+  "testEnvironment": "node",
+  "testRegex": "((\\.|/)(test|spec))(\\.|\\/.+)(jsx?|tsx?)$",
+  "testPathIgnorePatterns": [
+   "node_modules/",
+   "dist/"
+  ],
+  "collectCoverageFrom": [
+   "**/*.{ts,tsx,js,jsx}",
+   "!**/node_modules/**",
+   "!**/dist/**"
+  ],
+  "preset": "ts-jest",
+  "testMatch": null
+ },
+ "scripts": {
+  "dev": "watch 'npm run build' .",
+  "lint": "eslint '**/*.{js,ts,tsx}'",
+  "fix": "eslint '**/*.{js,ts,tsx}' --fix",
+  "build": "tsc -p .",
+  "test": "jest",
+  "test:watch": "watch jest",
+  "prepare": "npm run build",
+  "clean": "rm -rf dist node_modules coverage"
+ },
+ "dependencies": {},
+ "devDependencies": {
+  "@types/jest": "^26.0.0",
+  "@types/node": "^14.0.13",
+  "@typescript-eslint/eslint-plugin": "4.0.1",
+  "@typescript-eslint/parser": "4.0.1",
+  "babel-core": "^6.26.3",
+  "babel-jest": "^26.0.1",
+  "eslint": "7.8.1",
+  "eslint-plugin-prettierx": "github:nilssonemma/eslint-plugin-prettierx#master",
+  "jest": "^26",
+  "prettierx": "github:simonmika/prettierx#newline-before-clause",
+  "ts-jest": "^26.1.0",
+  "typescript": "^3.9.5",
+  "watch": "^1.0.2"
+ }
+}

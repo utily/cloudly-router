@@ -1,0 +1,5 @@
+.vscode
+**/*.spec.js
+**/*.spec.ts
+coverage
+.env

@@ -1,0 +1,42 @@
+{
+	"root": true,
+	"parser": "@typescript-eslint/parser",
+	"plugins": [
+		"@typescript-eslint",
+		"prettierx"
+	],
+	"extends": [
+		"eslint:recommended",
+		"plugin:@typescript-eslint/eslint-recommended",
+		"plugin:@typescript-eslint/recommended",
+		"plugin:prettierx/default",
+		"plugin:prettierx/@typescript-eslint"
+	],
+	"rules": {
+		"prettierx/options": [
+			1,
+			{
+				"singleQuote": false
+			}
+		],
+		"@typescript-eslint/no-explicit-any": "off",
+		"@typescript-eslint/no-namespace": "off",
+		"prefer-const": 1,
+		"@typescript-eslint/no-unused-vars": [
+			2,
+			{
+				"vars": "all",
+				"args": "none",
+				"varsIgnorePattern": "h"
+			}
+		],
+		"@typescript-eslint/explicit-module-boundary-types": "off",
+		"no-case-declarations": "off",
+		"no-inner-declarations": "off"
+	},
+	"settings": {
+		"prettierx": {
+			"usePrettierrc": true
+		}
+	}
+}
