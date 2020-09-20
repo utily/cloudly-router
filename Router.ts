@@ -3,22 +3,22 @@ import { Method } from "./Method"
 import { Route } from "./Route"
 
 export class Router {
-	private readonly routes: [Route, Handler][] = []
+	private readonly routes: Route[] = []
 	origin: string[] = ["*"]
 	add(method: Method | Method[], pattern: string, handler: Handler) {
-		this.routes.push([Route.create(method, pattern), handler])
+		this.routes.push(Route.create(method, pattern, handler))
 	}
 	async handle(event: FetchEvent): Promise<Response> {
 		let result: Response | undefined
 		let allowedMethods: Method[] = []
 		for (const route of this.routes) {
-			const r = route[0].match(event.request)
+			const r = route.match(event.request)
 			if (r)
-				if (route[0].methods.some(m => m == event.request.method)) {
-					result = await route[1](event, r.parameter)
+				if (route.methods.some(m => m == event.request.method)) {
+					result = await route.handler(event, r.parameter)
 					break
 				} else
-					allowedMethods = allowedMethods.concat(...route[0].methods)
+					allowedMethods = allowedMethods.concat(...route.methods)
 		}
 		return (
 			result ||
