@@ -1,1 +1,2 @@
-export type Handler = (event: FetchEvent, parameter?: { [key: string]: string | undefined }) => Promise<Response>
+import { Parameters } from "./Parameters"
+export type Handler = (request: Request, parameter?: Parameters) => Promise<Response>
