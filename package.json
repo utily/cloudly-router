@@ -38,13 +38,13 @@
  "dependencies": {},
  "devDependencies": {
   "@types/jest": "^26.0.14",
-  "@typescript-eslint/eslint-plugin": "4.1.1",
-  "@typescript-eslint/parser": "4.1.1",
-  "eslint": "7.9.0",
+  "@typescript-eslint/eslint-plugin": "4.4.0",
+  "@typescript-eslint/parser": "4.4.0",
+  "eslint": "7.11.0",
   "eslint-plugin-prettierx": "github:nilssonemma/eslint-plugin-prettierx#master",
-  "jest": "^26.4.2",
+  "jest": "^26.5.2",
   "prettierx": "github:simonmika/prettierx#newline-before-clause",
-  "ts-jest": "^26.4.0",
+  "ts-jest": "^26.4.1",
   "ts-loader": "^8.0.4",
   "typescript": "^4.0.3"
  }
