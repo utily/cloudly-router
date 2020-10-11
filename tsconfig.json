@@ -7,6 +7,6 @@
 		"outDir": "dist"
 	},
 	"files": [
-		"index.ts", "./Parameters.ts"
+		"index.ts"
 	]
 }

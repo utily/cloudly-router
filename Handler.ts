@@ -1,2 +1,3 @@
-import { Parameters } from "./Parameters"
-export type Handler = (request: Request, parameter?: Parameters) => Promise<Response>
+import * as http from "cloud-http"
+
+export type Handler = (request: http.Request) => Promise<http.Response.Like | any>

@@ -1,21 +1,22 @@
+import * as http from "cloud-http"
 import { Handler } from "./Handler"
-import { Method } from "./Method"
 import { Route } from "./Route"
 
 export class Router {
 	private readonly routes: Route[] = []
 	origin: string[] = ["*"]
-	add(method: Method | Method[], pattern: string, handler: Handler) {
+	add(method: http.Method | http.Method[], pattern: string, handler: Handler) {
 		this.routes.push(Route.create(method, pattern, handler))
 	}
 	async handle(event: FetchEvent): Promise<void> {
 		let result: Response | undefined
-		let allowedMethods: Method[] = []
+		const request = http.Request.from(event.request)
+		let allowedMethods: http.Method[] = []
 		for (const route of this.routes) {
-			const r = route.match(event.request)
+			const r = route.match(request)
 			if (r)
 				if (route.methods.some(m => m == event.request.method)) {
-					result = await route.handler(event.request, r.parameter)
+					result = await http.Response.to(http.Response.create(await route.handler(request)))
 					break
 				} else
 					allowedMethods = allowedMethods.concat(...route.methods)
