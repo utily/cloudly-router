@@ -1,6 +1,7 @@
 {
 	"extends": "./tsconfig.test.json",
 	"compilerOptions": {
+		"module": "esnext",
 		"declaration": true,
 		"sourceMap": true,
 		"sourceRoot": "../",
