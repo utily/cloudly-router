@@ -13,7 +13,7 @@ export class Route {
 				pattern
 					.split("/")
 					.map(folder => (folder.startsWith(":") ? `(?<${folder.substr(1)}>[^/\\?#]*)` : folder))
-					.join("/")
+					.join("/") + "/*$"
 			),
 			Array.isArray(method) ? method : [method],
 			handler

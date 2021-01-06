@@ -36,7 +36,7 @@
   "clean": "rm -rf dist node_modules coverage"
  },
  "dependencies": {
-  "cloud-http": "0.0.5"
+  "cloud-http": "florianebmeier/cloud-http#test-branch"
  },
  "devDependencies": {
   "@types/jest": "^26.0.14",
