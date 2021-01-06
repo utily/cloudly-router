@@ -19,11 +19,30 @@
   "release": true
  },
  "jest": {
+  "transform": {
+   "^.+\\.(j|t)sx?$": "ts-jest"
+  },
+  "transformIgnorePatterns": [
+   "<rootDir>/node_modules/(?!(cloud-http)/.*)"
+  ],
+  "globals": {
+   "ts-jest": {
+    "tsconfig": "tsconfig.test.json"
+   }
+  },
   "testEnvironment": "node",
-  "testRegex": "((\\.|/)(test|spec))(\\.|\\/.+)jsx?$",
+  "testRegex": "((\\.|/)(test|spec))(\\.|\\/.+)(jsx?|tsx?)$",
   "testPathIgnorePatterns": [
-   "node_modules/"
-  ]
+   "node_modules/",
+   "dist/"
+  ],
+  "collectCoverageFrom": [
+   "**/*.{ts,tsx,js,jsx}",
+   "!**/node_modules/**",
+   "!**/dist/**"
+  ],
+  "preset": "ts-jest",
+  "testMatch": null
  },
  "scripts": {
   "dev": "watch 'npm run build' .",
