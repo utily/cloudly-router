@@ -17,7 +17,7 @@ export class Router {
 				const r = route.match(request)
 				if (r)
 					if (route.methods.some(m => m == request.method)) {
-						response = await http.Response.to(http.Response.create(await route.handler(request)))
+						response = await route.handler(request)
 						break
 					} else
 						allowedMethods = allowedMethods.concat(...route.methods)
@@ -34,7 +34,7 @@ export class Router {
 									accessControlAllowMethods: allowedMethods,
 									accessControlAllowHeaders: "Content-Type",
 								},
-							}
+						  }
 						: { status: 405, header: { allow: allowedMethods } })
 			)
 		} else
