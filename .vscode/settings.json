@@ -1,13 +1,14 @@
 {
 	"files.exclude": {
 		".*": true,
+		"*.code-workspace": true,
 		"*.json": true,
+		"CODEOWNERS": true,
 		"dist": true,
-		"README.md": true,
 		"LICENSE": true,
-		"tsconfig.*": true,
 		"node_modules": true,
-		"*.code-workspace": true
+		"README.md": true,
+		"tsconfig.*": true
 	},
 	"editor.tabSize": 2,
 	"editor.detectIndentation": false,
