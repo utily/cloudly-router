@@ -5,13 +5,13 @@ describe("Router", () => {
 		const router = new cloudRouter.Router()
 		router.add("GET", "/test", async request => request.url)
 		expect(router).toMatchObject({
-			origin: [ "*" ],
-			routes: [{
-				expression: /\/test/,
-				methods: [
-					"GET",
-				],
-			}],
+			origin: ["*"],
+			routes: [
+				{
+					expression: /\/test/,
+					methods: ["GET"],
+				},
+			],
 		})
 	})
 })

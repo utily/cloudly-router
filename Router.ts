@@ -17,7 +17,7 @@ export class Router {
 				const r = route.match(request)
 				if (r)
 					if (route.methods.some(m => m == request.method)) {
-						response = await route.handler(request)
+						response = await route.handler(r)
 						break
 					} else
 						allowedMethods = allowedMethods.concat(...route.methods)
