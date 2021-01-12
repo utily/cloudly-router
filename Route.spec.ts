@@ -5,9 +5,7 @@ describe("Route", () => {
 		const route = cloudRouter.Route.create("GET", "/test", async request => request.url)
 		expect(route).toMatchObject({
 			expression: /\/test/,
-			methods: [
-				"GET",
-			],
+			methods: ["GET"],
 		})
 	})
 })
