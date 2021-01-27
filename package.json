@@ -1,6 +1,6 @@
 {
  "name": "cloud-router",
- "version": "0.0.11",
+ "version": "0.0.12",
  "description": "Router for web worker based backends such as CloudFlare Workers.",
  "author": "Cogneco AB",
  "license": "MIT",
