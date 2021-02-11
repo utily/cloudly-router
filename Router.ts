@@ -30,15 +30,14 @@ export class Router {
 						? {
 								status: 204,
 								header: {
-									accessControlAllowOrigin: this.origin,
 									accessControlAllowMethods: allowedMethods,
-									accessControlAllowHeaders: "Content-Type",
+									accessControlAllowHeaders: ["content-type", "authorization"],
 								},
 						  }
 						: { status: 405, header: { allow: allowedMethods } })
 			)
 		} else
 			result = await this.handle(http.Request.create(request))
-		return result
+		return { ...result, header: { ...result.header, accessControlAllowOrigin: this.origin[0] } }
 	}
 }
