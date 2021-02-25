@@ -1,13 +1,19 @@
 import * as http from "cloud-http"
 import { Handler } from "./Handler"
 import { Route } from "./Route"
+import { Callback } from "./Callback"
 
 export class Router {
 	private readonly routes: Route[] = []
+	private readonly callbacks: Callback[] = []
 	origin: string[] = ["*"]
 	add(method: http.Method | http.Method[], pattern: string, handler: Handler) {
 		this.routes.push(Route.create(method, pattern, handler))
 	}
+	async finish(): Promise<void> {
+		await Promise.all(this.callbacks.map(c => c.execute()))
+	}
+
 	async handle(request: http.Request.Like | http.Request): Promise<http.Response> {
 		let result: http.Response
 		if (http.Request.is(request)) {
@@ -17,7 +23,12 @@ export class Router {
 				const r = route.match(request)
 				if (r)
 					if (route.methods.some(m => m == request.method)) {
-						response = await route.handler(r)
+						try {
+							response = await route.handler(r, this.callbacks)
+						} catch (error) {
+							this.callbacks.every(c => c.error(error))
+							error.message
+						}
 						break
 					} else
 						allowedMethods = allowedMethods.concat(...route.methods)

@@ -1,3 +1,4 @@
 import * as http from "cloud-http"
+import { Callback } from "./Callback"
 
-export type Handler = (request: http.Request) => Promise<http.Response.Like | any>
+export type Handler = (request: http.Request, callbacks: Callback[]) => Promise<http.Response.Like | any>
