@@ -11,6 +11,7 @@ export class Router {
 		this.routes.push(Route.create(method, pattern, handler))
 	}
 	async finish(): Promise<void> {
+		console.log(`Executing ${this.callbacks.length} Callbacks!`)
 		await Promise.all(this.callbacks.map(c => c.execute()))
 	}
 
