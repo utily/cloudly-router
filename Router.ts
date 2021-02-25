@@ -5,7 +5,7 @@ import { Callback } from "./Callback"
 
 export class Router {
 	private readonly routes: Route[] = []
-	private readonly callbacks: Callback[] = []
+	private callbacks: Callback[] = []
 	origin: string[] = ["*"]
 	add(method: http.Method | http.Method[], pattern: string, handler: Handler) {
 		this.routes.push(Route.create(method, pattern, handler))
