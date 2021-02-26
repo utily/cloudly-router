@@ -26,6 +26,7 @@ export class Router {
 						try {
 							response = await route.handler(r, this.context)
 						} catch (error) {
+							response = { status: 500, body: error.message }
 							this.context.error(error)
 						}
 						break
