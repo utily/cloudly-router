@@ -13,7 +13,6 @@ export class Context {
 			callback.error(error)
 	}
 	async finish(): Promise<void> {
-		console.log("Executing, ", this.callbacks.length, " Callbacks.")
 		for (const callback of this.callbacks)
 			await callback.execute()
 		this.callbacks = []
