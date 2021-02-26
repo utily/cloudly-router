@@ -2,13 +2,13 @@ import * as http from "cloud-http"
 import { Handler } from "./Handler"
 import { Route } from "./Route"
 
-export class Router {
-	private readonly routes: Route[] = []
+export class Router<T> {
+	private readonly routes: Route<T>[] = []
 	origin: string[] = ["*"]
-	add(method: http.Method | http.Method[], pattern: string, handler: Handler) {
+	add(method: http.Method | http.Method[], pattern: string, handler: Handler<T>) {
 		this.routes.push(Route.create(method, pattern, handler))
 	}
-	async handle(request: http.Request.Like | http.Request): Promise<http.Response> {
+	async handle(request: http.Request.Like | http.Request, context: T): Promise<http.Response> {
 		let result: http.Response
 		if (http.Request.is(request)) {
 			let response: http.Response.Like | undefined
@@ -17,7 +17,7 @@ export class Router {
 				const r = route.match(request)
 				if (r)
 					if (route.methods.some(m => m == request.method)) {
-						response = await route.handler(r)
+						response = await route.handler(r, context)
 						break
 					} else
 						allowedMethods = allowedMethods.concat(...route.methods)
@@ -37,7 +37,7 @@ export class Router {
 						: { status: 405, header: { allow: allowedMethods } })
 			)
 		} else
-			result = await this.handle(http.Request.create(request))
+			result = await this.handle(http.Request.create(request), context)
 		return { ...result, header: { ...result.header, accessControlAllowOrigin: this.origin[0] } }
 	}
 }

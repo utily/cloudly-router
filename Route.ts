@@ -1,13 +1,13 @@
 import * as http from "cloud-http"
 import { Handler } from "./Handler"
 
-export class Route {
-	private constructor(readonly expression: RegExp, readonly methods: http.Method[], readonly handler: Handler) {}
+export class Route<T> {
+	private constructor(readonly expression: RegExp, readonly methods: http.Method[], readonly handler: Handler<T>) {}
 	match(request: http.Request): http.Request | undefined {
 		const match = request.url.pathname.match(this.expression)
 		return (match && { ...request, parameter: match.groups || {} }) || undefined
 	}
-	static create(method: http.Method | http.Method[], pattern: string, handler: Handler): Route {
+	static create<T>(method: http.Method | http.Method[], pattern: string, handler: Handler<T>): Route<T> {
 		return new Route(
 			new RegExp(
 				pattern
