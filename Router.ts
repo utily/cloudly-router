@@ -13,6 +13,9 @@ export class Router {
 	async finish(): Promise<void> {
 		await this.context.finish()
 	}
+	error(error: Error): void {
+		this.context.error(error)
+	}
 
 	async handle(request: http.Request.Like | http.Request): Promise<http.Response> {
 		let result: http.Response
@@ -23,12 +26,7 @@ export class Router {
 				const r = route.match(request)
 				if (r)
 					if (route.methods.some(m => m == request.method)) {
-						try {
-							response = await route.handler(r, this.context)
-						} catch (error) {
-							response = { status: 500, body: error.message }
-							this.context.error(error)
-						}
+						response = await route.handler(r, this.context)
 						break
 					} else
 						allowedMethods = allowedMethods.concat(...route.methods)
