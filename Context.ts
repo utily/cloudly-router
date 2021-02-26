@@ -5,17 +5,17 @@ export class Context {
 		this.callbacks = []
 	}
 	register(callback: Callback): void {
-		this.callbacks.push(callback)
+		if (Callback.is(callback))
+			this.callbacks.push(callback)
 	}
-	error(error: Error) {
-		for (const callback of this.callbacks) {
+	error(error: Error): void {
+		for (const callback of this.callbacks)
 			callback.error(error)
-		}
 	}
-	async finish() {
+	async finish(): Promise<void> {
 		console.log("Executing, ", this.callbacks.length, " Callbacks.")
-		for (const callback of this.callbacks) {
+		for (const callback of this.callbacks)
 			await callback.execute()
-		}
+		this.callbacks = []
 	}
 }
