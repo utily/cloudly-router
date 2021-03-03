@@ -7,7 +7,7 @@ describe("cloud-router", () => {
 	})
 	it("add route", () => {
 		const router = new CloudRouter.Router()
-		router.add(["GET", "POST"], "/test/:id/handler", async request => request.url)
+		router.add(["GET", "POST"], "/test/:id/handler", async (request: any) => request.url)
 		expect(router).toMatchObject({
 			origin: ["*"],
 			routes: [
