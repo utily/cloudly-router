@@ -31,7 +31,7 @@ export class Router<T> {
 								status: 204,
 								header: {
 									accessControlAllowMethods: allowedMethods,
-									accessControlAllowHeaders: ["Content-Type", "Authorization"],
+									accessControlAllowHeaders: ["Content-Type", "Authorization", "X-Ms-Continuation"],
 								},
 						  }
 						: { status: 405, header: { allow: allowedMethods } })
