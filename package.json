@@ -56,7 +56,7 @@
   "clean": "rm -rf dist node_modules coverage"
  },
  "dependencies": {
-  "cloud-http": "cogneco/cloud-http#nested-form-to-json"
+  "cloud-http": "0.0.30"
  },
  "devDependencies": {
   "@types/jest": "^26.0.20",
