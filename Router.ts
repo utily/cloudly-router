@@ -1,4 +1,4 @@
-import * as http from "cloud-http"
+import * as http from "cloudly-http"
 import { Handler } from "./Handler"
 import { Route } from "./Route"
 

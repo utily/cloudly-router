@@ -1,0 +1,31 @@
+name: "Bump"
+
+on:
+  push:
+    branches:
+      - "master"
+jobs:
+  bump-version:
+    name: "Deploy from master"
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, 'ci: version bump to ')"
+
+    steps:
+      - name: "Checkout source code"
+        uses: "actions/checkout@v2"
+        with:
+          token: ${{ secrets.ADMIN_TOKEN }}
+      - name: "Setup Node"
+        uses: "actions/setup-node@v2"
+        with:
+          node-version: 16
+      - name: Update NPM
+        run: npm install -g npm
+      - name: "Version Bump"
+        id: version-bump
+        uses: "phips28/gh-action-bump-version@master"
+        with:
+          tag-prefix: 'release-'
+        env:
+          GITHUB_TOKEN: ${{ secrets.ADMIN_TOKEN }}
