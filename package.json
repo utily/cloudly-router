@@ -1,6 +1,6 @@
 {
   "name": "cloudly-router",
-  "version": "0.0.19",
+  "version": "0.0.20",
   "description": "Router for web worker based backends such as CloudFlare Workers.",
   "author": "Simon Mika <simon@mika.se>",
   "license": "MIT",
