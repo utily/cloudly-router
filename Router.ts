@@ -3,8 +3,12 @@ import { Handler } from "./Handler"
 import { Route } from "./Route"
 
 export class Router<T> {
+	private readonly alternatePrefix: string[]
 	private readonly routes: Route<T>[] = []
 	origin: string[] = ["*"]
+	constructor(...alternatePrefix: string[]) {
+		this.alternatePrefix = alternatePrefix
+	}
 	add(method: http.Method | http.Method[], pattern: string, handler: Handler<T>) {
 		this.routes.push(Route.create(method, pattern, handler))
 	}
@@ -14,7 +18,7 @@ export class Router<T> {
 			let response: http.Response.Like | undefined
 			let allowedMethods: http.Method[] = []
 			for (const route of this.routes) {
-				const r = route.match(request)
+				const r = route.match(request, ...this.alternatePrefix)
 				if (r)
 					if (route.methods.some(m => m == request.method)) {
 						response = await route.handler(r, context)
