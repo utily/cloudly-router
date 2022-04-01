@@ -6,6 +6,8 @@ export class Router<T> {
 	private readonly alternatePrefix: string[]
 	private readonly routes: Route<T>[] = []
 	origin: string[] = ["*"]
+	allowedHeaders = ["Content-Type", "Authorization"]
+
 	constructor(...alternatePrefix: string[]) {
 		this.alternatePrefix = alternatePrefix
 	}
@@ -35,7 +37,7 @@ export class Router<T> {
 								status: 204,
 								header: {
 									accessControlAllowMethods: allowedMethods,
-									accessControlAllowHeaders: ["Content-Type", "Authorization"],
+									accessControlAllowHeaders: this.allowedHeaders,
 								},
 						  }
 						: { status: 405, header: { allow: allowedMethods } })
