@@ -16,8 +16,16 @@ export class Route<T> {
 			new RegExp(
 				pattern
 					.split("/")
-					.map(folder => (folder.startsWith(":") ? `(?<${folder.substr(1)}>[^/\\?#]*)` : folder))
-					.join("/") + "/*$"
+					.map(folder =>
+						folder.startsWith(":") && folder.endsWith("+")
+							? `(?<${folder.substring(1, folder.length - 1)}>[^\\?#]+)`
+							: folder.startsWith(":")
+							? `(?<${folder.substring(1)}>[^/\\?#]*)`
+							: folder == "*"
+							? "[^\\?#]*"
+							: folder
+					)
+					.join("/") + "/?$"
 			),
 			Array.isArray(method) ? method : [method],
 			handler
