@@ -5,7 +5,7 @@ describe("Route", () => {
 	it("create", () => {
 		const route = cloudRouter.Route.create("GET", "/test", async (request: any) => request.url)
 		expect(route).toMatchObject({
-			expression: /\/test/,
+			pattern: {},
 			methods: ["GET"],
 		})
 	})
@@ -20,17 +20,17 @@ describe("Route", () => {
 	it("match alternatePrefix", () => {
 		const route = cloudRouter.Route.create("GET", "/test", async (request: any) => request.url)
 		const request = http.Request.create("https://example.com/api/test")
-		expect(route.match(request, "api")).toEqual({
+		expect(route.match(request, "/api")).toEqual({
 			...request,
 			parameter: {},
 		})
 	})
 	it("match repeating group with a minimum of one", () => {
-		const route = cloudRouter.Route.create("GET", "/test/:id/:trailingpath+", async (request: any) => request.url)
+		const route = cloudRouter.Route.create("GET", "/test/:id/:trailingPath+", async (request: any) => request.url)
 		const request = http.Request.create("https://example.com/test/someid/path/to/something?testquery=value")
 		expect(route.match(request)).toEqual({
 			...request,
-			parameter: { id: "someid", trailingpath: "path/to/something" },
+			parameter: { id: "someid", trailingPath: "path/to/something" },
 			search: { testquery: "value" },
 		})
 		const request2 = http.Request.create("https://example.com/test/someid/?testquery=value")
@@ -43,7 +43,7 @@ describe("Route", () => {
 		const request = http.Request.create("https://example.com/test/someid/path/to/something?testquery=value")
 		expect(route.match(request)).toEqual({
 			...request,
-			parameter: { id: "someid" },
+			parameter: { "0": "path/to/something", id: "someid" },
 			search: { testquery: "value" },
 		})
 	})

@@ -56,7 +56,8 @@
     "clean": "rm -rf dist node_modules coverage"
   },
   "dependencies": {
-    "cloudly-http": "^0.0.39"
+    "cloudly-http": "^0.0.39",
+    "urlpattern-polyfill": "^5.0.3"
   },
   "devDependencies": {
     "@types/isomorphic-fetch": "0.0.35",

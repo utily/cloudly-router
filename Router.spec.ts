@@ -9,7 +9,7 @@ describe("Router", () => {
 			origin: ["*"],
 			routes: [
 				{
-					expression: /\/test/,
+					pattern: { pathname: "/test" },
 					methods: ["GET"],
 				},
 			],
