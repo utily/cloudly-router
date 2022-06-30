@@ -1,6 +1,6 @@
+import "urlpattern-polyfill"
 import * as http from "cloudly-http"
 import { Handler } from "./Handler"
-import "urlpattern-polyfill"
 
 export class Route<T> {
 	private constructor(readonly pattern: URLPattern, readonly methods: http.Method[], readonly handler: Handler<T>) {}
@@ -9,8 +9,8 @@ export class Route<T> {
 		const prefix = alternatePrefix.find(prefix => path.startsWith(prefix))
 		if (prefix)
 			path = path.substring(prefix.length)
-		const match = this.pattern.exec({ pathname: path }) ?? undefined
-		return (match && { ...request, parameter: match.pathname.groups || {} }) || undefined
+		const match = this.pattern.exec({ pathname: path })
+		return (match && { ...request, parameter: match?.pathname.groups || {} }) || undefined
 	}
 	static create<T>(method: http.Method | http.Method[], pattern: URLPattern | string, handler: Handler<T>): Route<T> {
 		return new Route(
