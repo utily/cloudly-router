@@ -12,7 +12,7 @@ describe("cloud-router", () => {
 			origin: ["*"],
 			routes: [
 				{
-					expression: /\/test\/(?<id>[^/?#]*)\/handler/,
+					pattern: { pathname: "/test/:id/handler" },
 					methods: ["GET", "POST"],
 				},
 			],

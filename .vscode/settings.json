@@ -25,6 +25,21 @@
 	"javascript.format.enable": false,
 	"typescript.format.enable": false,
 	"cSpell.words": [
-		"cloudly"
+		"authly",
+		"cloudly",
+		"cryptly",
+		"flagly",
+		"gracely",
+		"isoly",
+		"langly",
+		"paramly",
+		"persistly",
+		"selectivly",
+		"servly",
+		"servly-azure",
+		"smoothly",
+		"tidily",
+		"transactly",
+		"uply"
 	]
 }

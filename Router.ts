@@ -11,7 +11,7 @@ export class Router<T> {
 	constructor(...alternatePrefix: string[]) {
 		this.alternatePrefix = alternatePrefix
 	}
-	add(method: http.Method | http.Method[], pattern: string, handler: Handler<T>) {
+	add(method: http.Method | http.Method[], pattern: URLPattern | string, handler: Handler<T>) {
 		this.routes.push(Route.create(method, pattern, handler))
 	}
 	async handle(request: http.Request.Like | http.Request, context: T): Promise<http.Response> {
