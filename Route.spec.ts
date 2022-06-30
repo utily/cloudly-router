@@ -1,5 +1,5 @@
-import * as cloudRouter from "./index"
 import * as http from "cloudly-http"
+import * as cloudRouter from "./index"
 
 describe("Route", () => {
 	it("create", () => {

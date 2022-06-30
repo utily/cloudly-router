@@ -3,7 +3,8 @@
 	"parser": "@typescript-eslint/parser",
 	"plugins": [
 		"@typescript-eslint",
-		"prettierx"
+		"prettierx",
+		"simple-import-sort"
 	],
 	"extends": [
 		"eslint:recommended",
@@ -31,7 +32,36 @@
 		],
 		"@typescript-eslint/explicit-module-boundary-types": "off",
 		"no-case-declarations": "off",
-		"no-inner-declarations": "off"
+		"no-inner-declarations": "off",
+		"sort-imports": "off",
+		"simple-import-sort/imports": [
+			"error",
+			{
+				"groups": [
+					[
+						"@stencil/core",
+						"cryptly",
+						"flagly",
+						"gracely",
+						"isoly",
+						"paramly",
+						"selectively",
+						"langly",
+						"tidily",
+						"uply",
+						"authly",
+						"persistly",
+						"servly",
+						"servly-azure",
+						"smoothly",
+						"^\\u0000",
+						"^@?\\w",
+						"^",
+						"^\\."
+					]
+				]
+			}
+		]
 	},
 	"settings": {
 		"prettierx": {

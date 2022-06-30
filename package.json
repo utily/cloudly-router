@@ -1,78 +1,78 @@
 {
-  "name": "cloudly-router",
-  "version": "0.0.22",
-  "description": "Router for web worker based backends such as CloudFlare Workers.",
-  "author": "Simon Mika <simon@mika.se>",
-  "license": "MIT",
-  "repository": "https://github.com/utily/cloudly-router",
-  "bugs": {
-    "url": "https://github.com/utily/cloudly-router/issues"
-  },
-  "homepage": "https://github.com/utily/cloudly-router",
-  "private": false,
-  "main": "dist/index.js",
-  "typings": "dist/index.d.ts",
-  "git": {
-    "tagName": "v${version}"
-  },
-  "github": {
-    "release": true
-  },
-  "jest": {
-    "globals": {
-      "ts-jest": {
-        "tsconfig": "tsconfig.test.json"
-      }
-    },
-    "transform": {
-      "^.+\\.(j|t)sx?$": "ts-jest"
-    },
-    "transformIgnorePatterns": [
-      "<rootDir>/node_modules/(?!cloudly-http/.*)"
-    ],
-    "testEnvironment": "node",
-    "testRegex": "((\\.|/)(test|spec))(\\.|\\/.+)(jsx?|tsx?)$",
-    "testPathIgnorePatterns": [
-      "node_modules/",
-      "dist/"
-    ],
-    "collectCoverageFrom": [
-      "**/*.{ts,tsx,js,jsx}",
-      "!**/node_modules/**",
-      "!**/dist/**"
-    ],
-    "preset": "ts-jest",
-    "testMatch": null
-  },
-  "scripts": {
-    "dev": "watch 'npm run build' .",
-    "lint": "eslint '**/*.{js,ts,tsx}'",
-    "fix": "eslint '**/*.{js,ts,tsx}' --fix",
-    "build": "tsc -p .",
-    "pretest": "npm run build",
-    "test": "jest",
-    "test:watch": "watch jest",
-    "prepare": "npm run build",
-    "clean": "rm -rf dist node_modules coverage"
-  },
-  "dependencies": {
-    "cloudly-http": "^0.0.39",
-    "urlpattern-polyfill": "^5.0.3"
-  },
-  "devDependencies": {
-    "@types/isomorphic-fetch": "0.0.35",
-    "@types/jest": "^27.0.3",
-    "@typescript-eslint/eslint-plugin": "5.8.0",
-    "@typescript-eslint/parser": "5.8.0",
-    "eslint": "7.32.0",
-    "eslint-plugin-prettierx": "github:utily/eslint-plugin-prettierx#utily-20211221",
-    "eslint-plugin-simple-import-sort": "^7.0.0",
-    "isomorphic-fetch": "^3.0.0",
-    "jest": "^27.4.5",
-    "prettierx": "github:utily/prettierx#utily-20211221",
-    "rimraf": "^3.0.2",
-    "ts-jest": "^27.1.2",
-    "typescript": "^4.5.4",
-    "watch": "^0.13.0"
-  }
+	"name": "cloudly-router",
+	"version": "0.0.22",
+	"description": "Router for web worker based backends such as CloudFlare Workers.",
+	"author": "Simon Mika <simon@mika.se>",
+	"license": "MIT",
+	"repository": "https://github.com/utily/cloudly-http",
+	"bugs": {
+		"url": "https://github.com/utily/cloudly-http/issues"
+	},
+	"homepage": "https://github.com/utily/cloudly-http",
+	"private": false,
+	"main": "dist/index.js",
+	"typings": "dist/index.d.ts",
+	"type": "module",
+	"git": {
+		"tagName": "v${version}"
+	},
+	"github": {
+		"release": true
+	},
+	"jest": {
+		"globals": {
+			"ts-jest": {
+				"tsconfig": "tsconfig.test.json"
+			}
+		},
+		"transform": {
+			"^.+\\.(j|t)sx?$": "ts-jest"
+		},
+		"transformIgnorePatterns": [
+			"<rootDir>/node_modules/(?!(cryptly|authly|isoly|gracely|cloudly-http|cloudly-router|cloudly-formdata)/.*)"
+		],
+		"testEnvironment": "node",
+		"testRegex": "((\\.|/)(test|spec))(\\.|\\/.+)(jsx?|tsx?)$",
+		"testPathIgnorePatterns": [
+			"node_modules/",
+			"dist/"
+		],
+		"collectCoverageFrom": [
+			"**/*.{ts,tsx,js,jsx}",
+			"!**/node_modules/**",
+			"!**/dist/**"
+		],
+		"preset": "ts-jest",
+		"testMatch": null
+	},
+	"scripts": {
+		"dev": "watch 'npm run build' .",
+		"lint": "eslint '**/*.{ts,tsx}'",
+		"fix": "eslint '**/*.{ts,tsx}' --fix",
+		"build": "tsc -p .",
+		"test": "jest --maxWorkers=2",
+		"test:watch": "watch jest",
+		"prepare": "npm run build",
+		"clean": "rimraf dist node_modules coverage"
+	},
+	"dependencies": {
+		"cloudly-http": "^0.0.49",
+		"urlpattern-polyfill": "^5.0.3"
+	},
+	"devDependencies": {
+		"@types/isomorphic-fetch": "0.0.36",
+		"@types/jest": "^28.1.3",
+		"@typescript-eslint/eslint-plugin": "5.30.0",
+		"@typescript-eslint/parser": "5.30.0",
+		"eslint": "^8.18.0",
+		"eslint-plugin-prettierx": "github:utily/eslint-plugin-prettierx#utily-20220323",
+		"eslint-plugin-simple-import-sort": "^7.0.0",
+		"isomorphic-fetch": "^3.0.0",
+		"jest": "^28.1.2",
+		"prettierx": "github:utily/prettierx#utily-20220323",
+		"rimraf": "^3.0.2",
+		"ts-jest": "^28.0.5",
+		"typescript": "^4.7.4",
+		"watch": "^0.13.0"
+	}
 }
