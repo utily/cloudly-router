@@ -1,3 +1,4 @@
+import "isomorphic-fetch"
 import * as CloudRouter from "./index"
 
 describe("cloud-router", () => {
