@@ -1,3 +1,4 @@
+import "isomorphic-fetch"
 import * as http from "cloudly-http"
 import * as cloudRouter from "./index"
 
