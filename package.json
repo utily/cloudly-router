@@ -54,7 +54,7 @@
 		"clean": "rimraf dist node_modules coverage"
 	},
 	"dependencies": {
-		"cloudly-http": "^0.0.52",
+		"cloudly-http": "^0.0.53",
 		"urlpattern-polyfill": "^6.0.1"
 	},
 	"devDependencies": {
@@ -63,11 +63,11 @@
 		"@typescript-eslint/eslint-plugin": "5.39.0",
 		"@typescript-eslint/parser": "5.39.0",
 		"eslint": "^8.24.0",
-		"eslint-plugin-prettierx": "github:utily/eslint-plugin-prettierx#utily-20220323",
+		"eslint-plugin-prettierx": "github:utily/eslint-plugin-prettierx#utily-20221021",
 		"eslint-plugin-simple-import-sort": "^8.0.0",
 		"isomorphic-fetch": "^3.0.0",
 		"jest": "^29.1.2",
-		"prettierx": "github:utily/prettierx#utily-20220323",
+		"prettierx": "github:utily/prettierx#utily-20221021",
 		"rimraf": "^3.0.2",
 		"ts-jest": "^29.0.3",
 		"typescript": "^4.8.4",
