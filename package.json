@@ -1,6 +1,6 @@
 {
 	"name": "cloudly-router",
-	"version": "0.0.27",
+	"version": "0.1.0",
 	"description": "Router for web worker based backends such as CloudFlare Workers.",
 	"author": "Simon Mika <simon@mika.se>",
 	"license": "MIT",
@@ -53,7 +53,7 @@
 		"clean": "rimraf dist node_modules coverage"
 	},
 	"dependencies": {
-		"cloudly-http": "^0.0.55",
+		"cloudly-http": "^0.1.1",
 		"urlpattern-polyfill": "^6.0.2"
 	},
 	"devDependencies": {
