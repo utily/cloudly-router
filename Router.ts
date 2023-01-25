@@ -47,3 +47,6 @@ export class Router<T> {
 		return { ...result, header: { ...result.header, accessControlAllowOrigin: this.origin[0] } }
 	}
 }
+
+http.Parser.add(async request => await request.formData(), "multipart/form-data")
+http.Serializer.add(async body => body, "multipart/form-data")
