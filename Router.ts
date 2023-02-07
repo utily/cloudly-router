@@ -1,5 +1,6 @@
 import * as http from "cloudly-http"
 import { Handler } from "./Handler"
+import * as platform from "./platform"
 import { Route } from "./Route"
 
 export class Router<T> {
@@ -11,13 +12,16 @@ export class Router<T> {
 	constructor(...alternatePrefix: string[]) {
 		this.alternatePrefix = alternatePrefix
 	}
-	add(method: http.Method | http.Method[], pattern: URLPattern | string, handler: Handler<T>) {
-		this.routes.push(Route.create(method, pattern, handler))
+	add(method: http.Method | http.Method[], pattern: URLPattern | string, handler: Handler<T>, parse = true) {
+		this.routes.push(Route.create(method, pattern, handler, parse))
 	}
-	async handle(request: http.Request.Like | http.Request, context: T): Promise<http.Response> {
-		let result: http.Response
-		if (http.Request.is(request)) {
-			let response: http.Response.Like | undefined
+	async handle(
+		request: http.Request.Like | http.Request | platform.Request,
+		context: T
+	): Promise<http.Response | platform.Response> {
+		let result: http.Response | platform.Response
+		if (http.Request.is(request) || request instanceof platform.Request) {
+			let response: http.Response.Like | platform.Response | undefined
 			let allowedMethods: http.Method[] = []
 			for (const route of this.routes) {
 				const r = route.match(request, ...this.alternatePrefix)
@@ -28,22 +32,27 @@ export class Router<T> {
 					} else
 						allowedMethods = allowedMethods.concat(...route.methods)
 			}
-			result = http.Response.create(
-				response ||
-					(allowedMethods.length == 0
-						? { status: 404 }
-						: request.method == "OPTIONS"
-						? {
-								status: 204,
-								header: {
-									accessControlAllowMethods: allowedMethods,
-									accessControlAllowHeaders: this.allowedHeaders,
-								},
-						  }
-						: { status: 405, header: { allow: allowedMethods } })
-			)
+			result =
+				response instanceof platform.Response
+					? response
+					: http.Response.create(
+							response ||
+								(allowedMethods.length == 0
+									? { status: 404 }
+									: request.method == "OPTIONS"
+									? {
+											status: 204,
+											header: {
+												accessControlAllowMethods: allowedMethods,
+												accessControlAllowHeaders: this.allowedHeaders,
+											},
+									  }
+									: { status: 405, header: { allow: allowedMethods } })
+					  )
 		} else
 			result = await this.handle(http.Request.create(request), context)
-		return { ...result, header: { ...result.header, accessControlAllowOrigin: this.origin[0] } }
+		return result instanceof platform.Response
+			? result
+			: { ...result, header: { ...result.header, accessControlAllowOrigin: this.origin[0] } }
 	}
 }
