@@ -1,0 +1,33 @@
+name: "Bump 0.2"
+
+on:
+  push:
+    branches:
+      - "master-0.2"
+jobs:
+  bump-version:
+    name: "Bump Version"
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, 'ci: version bump to ')"
+
+    steps:
+      - name: "Checkout source code"
+        uses: "actions/checkout@v3"
+        with:
+          token: ${{ secrets.ADMIN_TOKEN }}
+      - name: "Setup Node"
+        uses: "actions/setup-node@v3"
+        with:
+          node-version: current
+          cache: "npm"
+      - name: "Version Bump"
+        id: version-bump
+        uses: "phips28/gh-action-bump-version@master"
+        with:
+          default: prerelease
+          preid: alpha
+          rc-wording: ""
+          tag-prefix: "release-"
+        env:
+          GITHUB_TOKEN: ${{ secrets.ADMIN_TOKEN }}

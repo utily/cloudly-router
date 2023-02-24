@@ -1,5 +1,5 @@
 import "isomorphic-fetch"
-import * as http from "cloudly-http"
+import { http } from "cloudly-http"
 import * as cloudRouter from "./index"
 
 describe("Router", () => {
