@@ -6,7 +6,14 @@ export class Router<T> {
 	private readonly routes: Route<T>[] = []
 	private readonly options: Router.Options
 	constructor(options?: Partial<Router.Options>) {
-		this.options = { alternatePrefix: [], origin: ["*"], allowHeaders: ["contentType", "authorization"], ...options }
+		this.options = {
+			alternatePrefix: [],
+			origin: ["*"],
+			allowHeaders: ["contentType", "authorization"],
+			middleware: http.Middleware.create("server"),
+			catch: false,
+			...options,
+		}
 	}
 	add(
 		method: http.Method | http.Method[],
@@ -22,12 +29,15 @@ export class Router<T> {
 			try {
 				result = await process()
 			} catch (error) {
-				result = http.Response.create({
-					status: 500,
-					type: "unknown error",
-					error: "exception",
-					description: (typeof error == "object" && error && error.toString()) || undefined,
-				})
+				result =
+					typeof this.options.catch == "function"
+						? this.options.catch(error)
+						: http.Response.create({
+								status: 500,
+								type: "unknown error",
+								error: "exception",
+								description: (typeof error == "object" && error && error.toString()) || undefined,
+						  })
 			}
 		else
 			result = await process()
@@ -39,10 +49,11 @@ export class Router<T> {
 		let result: http.Response | Response
 		if (http.Request.is(request)) {
 			const matches = this.routes.reduce<[http.Request, Route<T>][]>((result, route) => {
-				const r = route.match(request)
+				const r = route.match(request, ...this.options.alternatePrefix)
 				return r ? [...result, [r, route]] : result
 			}, [])
 			const match = matches.find(([request, route]) => route.methods.some(m => m == request.method))
+			console.log("match", match)
 			result = http.Response.create(
 				match
 					? this.catch(() => match[1].handle(match[0], context))
@@ -53,7 +64,7 @@ export class Router<T> {
 							status: 204,
 							header: {
 								accessControlAllowMethods: matches.flatMap(([_, r]) => r.methods),
-								accessControlAllowHeaders: this.options.allowHeaders,
+								accessControlAllowHeaders: this.options.allowHeaders.map(http.Request.Header.Name.from),
 							},
 					  }
 					: { status: 405, header: { allow: matches.flatMap(([_, r]) => r.methods) } }
@@ -63,9 +74,11 @@ export class Router<T> {
 				header: {
 					...result.header,
 					accessControlAllowOrigin: this.options.origin.some(origin =>
-						typeof origin == "string"
-							? origin == "*" || origin == request.header.origin
-							: request.header.origin && origin.test(request.header.origin)
+						origin == "*"
+							? "*"
+							: typeof origin == "string"
+							? origin == request.header.origin
+							: request.header.origin && origin.test(request.url.origin)
 					)
 						? request.header.origin
 						: "",
@@ -84,7 +97,7 @@ export namespace Router {
 		readonly alternatePrefix: string[]
 		readonly origin: (string | RegExp)[]
 		readonly allowHeaders: (keyof http.Request.Header | string)[]
-		readonly middleware?: http.Middleware
-		readonly catch?: true | ((exception: unknown) => http.Response.Like)
+		readonly middleware: http.Middleware
+		readonly catch: boolean | ((exception: unknown) => http.Response.Like)
 	}
 }

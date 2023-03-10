@@ -1,13 +1,13 @@
 import "isomorphic-fetch"
 import { http } from "cloudly-http"
-import * as cloudRouter from "./index"
+import { Router } from "./index"
 
 describe("Router", () => {
 	it("create", () => {
-		const router = new cloudRouter.Router()
+		const router = new Router()
 		router.add("GET", "/test", async (request: http.Request) => request.url.pathname)
 		expect(router).toMatchObject({
-			origin: ["*"],
+			options: { origin: ["*"] },
 			routes: [
 				{
 					pattern: { pathname: "/test" },
@@ -17,29 +17,68 @@ describe("Router", () => {
 		})
 	})
 	it("handle", async () => {
-		const router = new cloudRouter.Router()
-		router.add("GET", "/test", async (request: http.Request) => request.url.pathname)
-		expect(await router.handle(http.Request.create("https://example.com/test"), {})).toMatchObject({
+		const router = new Router()
+		router.add("GET", "/test", async (request: http.Request) => {
+			console.log("handle GET", request)
+			return request.url.pathname
+		})
+		expect(await router.handle(http.Request.create("https://example.com/test"), {})).toEqual({
 			body: "/test",
+			header: {
+				contentType: "text/plain; charset=utf-8",
+			},
+			status: 200,
+		})
+	})
+	it("handle options", async () => {
+		const router = new Router()
+		router.add("GET", "/test", async (request: http.Request) => request.url.pathname)
+		expect(
+			await router.handle(
+				http.Request.create({
+					method: "OPTIONS",
+					url: "https://example.com/test",
+					header: { origin: "http://origin:42" },
+				}),
+				{}
+			)
+		).toEqual({
+			body: undefined,
+			header: {
+				accessControlAllowHeaders: ["Content-Type", "Authorization"],
+				accessControlAllowMethods: ["GET"],
+				accessControlAllowOrigin: "http://origin:42",
+				contentType: undefined,
+			},
+			status: 204,
 		})
 	})
 	it("alternate prefix", async () => {
-		const router = new cloudRouter.Router("/api")
+		const router = new Router({ alternatePrefix: ["/api"] })
 		router.add("GET", "/test", async (request: http.Request) => request.url.pathname)
-		expect(await router.handle(http.Request.create("https://example.com/api/test"), {})).toMatchObject({
+		expect(await router.handle(http.Request.create("https://example.com/api/test"), {})).toEqual({
+			status: 200,
+			header: {},
 			body: "/api/test",
 		})
 	})
 	it("custom allow headers on options", async () => {
-		const router = new cloudRouter.Router()
-		router.allowedHeaders.push("X-Auth-Token")
+		const router = new Router({ allowHeaders: ["X-Auth-Token"] })
 		router.add("POST", "/test", async (request: http.Request) => request.url.pathname)
 		expect(
-			await router.handle(http.Request.create({ method: "OPTIONS", url: "https://example.com/test" }), {})
-		).toMatchObject({
+			await router.handle(
+				http.Request.create({
+					method: "OPTIONS",
+					url: "https://example.com/test",
+					header: { origin: "http://origin:42" },
+				}),
+				{}
+			)
+		).toEqual({
+			status: 204,
 			header: {
 				accessControlAllowMethods: ["POST"],
-				accessControlAllowOrigin: "*",
+				accessControlAllowOrigin: "http://origin:42",
 				accessControlAllowHeaders: ["Content-Type", "Authorization", "X-Auth-Token"],
 			},
 		})
