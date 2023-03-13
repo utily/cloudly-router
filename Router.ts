@@ -23,15 +23,15 @@ export class Router<T> {
 	) {
 		this.routes.push(Route.create(method, pattern, handler, middleware ?? this.options.middleware))
 	}
-	private async catch(process: () => Promise<http.Response.Like>): Promise<http.Response.Like> {
-		let result: http.Response.Like
+	private async catch(process: () => Promise<http.Response>): Promise<http.Response> {
+		let result: http.Response
 		if (this.options.catch)
 			try {
 				result = await process()
 			} catch (error) {
 				result =
 					typeof this.options.catch == "function"
-						? this.options.catch(error)
+						? http.Response.create(this.options.catch(error))
 						: http.Response.create({
 								status: 500,
 								type: "unknown error",
@@ -53,22 +53,19 @@ export class Router<T> {
 				return r ? [...result, [r, route]] : result
 			}, [])
 			const match = matches.find(([request, route]) => route.methods.some(m => m == request.method))
-			console.log("match", match)
-			result = http.Response.create(
-				match
-					? this.catch(() => match[1].handle(match[0], context))
-					: matches.length == 0
-					? { status: 404 }
-					: request.method == "OPTIONS"
-					? {
-							status: 204,
-							header: {
-								accessControlAllowMethods: matches.flatMap(([_, r]) => r.methods),
-								accessControlAllowHeaders: this.options.allowHeaders.map(http.Request.Header.Name.from),
-							},
-					  }
-					: { status: 405, header: { allow: matches.flatMap(([_, r]) => r.methods) } }
-			)
+			result = match
+				? await this.catch(() => match[1].handle(match[0], context))
+				: matches.length == 0
+				? http.Response.create({ status: 404 })
+				: request.method == "OPTIONS"
+				? http.Response.create({
+						status: 204,
+						header: {
+							accessControlAllowMethods: matches.flatMap(([_, r]) => r.methods),
+							accessControlAllowHeaders: this.options.allowHeaders.map(http.Request.Header.Name.to),
+						},
+				  })
+				: http.Response.create({ status: 405, header: { allow: matches.flatMap(([_, r]) => r.methods) } })
 			result = {
 				...result,
 				header: {

@@ -48,7 +48,7 @@
 		"lint": "eslint '**/*.{ts,tsx}'",
 		"fix": "eslint '**/*.{ts,tsx}' --fix",
 		"build": "tsc -p .",
-		"test": "jest --maxWorkers=2",
+		"test": "jest",
 		"prepare": "npm run build",
 		"clean": "rimraf dist node_modules coverage"
 	},

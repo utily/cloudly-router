@@ -4,7 +4,7 @@ import { Router } from "./index"
 
 describe("Router", () => {
 	it("create", () => {
-		const router = new Router()
+		const router = new Router({ catch: false })
 		router.add("GET", "/test", async (request: http.Request) => request.url.pathname)
 		expect(router).toMatchObject({
 			options: { origin: ["*"] },
@@ -17,11 +17,8 @@ describe("Router", () => {
 		})
 	})
 	it("handle", async () => {
-		const router = new Router()
-		router.add("GET", "/test", async (request: http.Request) => {
-			console.log("handle GET", request)
-			return request.url.pathname
-		})
+		const router = new Router({ catch: false })
+		router.add("GET", "/test", async (request: http.Request) => request.url.pathname)
 		expect(await router.handle(http.Request.create("https://example.com/test"), {})).toEqual({
 			body: "/test",
 			header: {
@@ -31,7 +28,7 @@ describe("Router", () => {
 		})
 	})
 	it("handle options", async () => {
-		const router = new Router()
+		const router = new Router({ catch: false })
 		router.add("GET", "/test", async (request: http.Request) => request.url.pathname)
 		expect(
 			await router.handle(
@@ -54,16 +51,16 @@ describe("Router", () => {
 		})
 	})
 	it("alternate prefix", async () => {
-		const router = new Router({ alternatePrefix: ["/api"] })
+		const router = new Router({ alternatePrefix: ["/api"], catch: false })
 		router.add("GET", "/test", async (request: http.Request) => request.url.pathname)
 		expect(await router.handle(http.Request.create("https://example.com/api/test"), {})).toEqual({
 			status: 200,
-			header: {},
+			header: { contentType: "text/plain; charset=utf-8" },
 			body: "/api/test",
 		})
 	})
 	it("custom allow headers on options", async () => {
-		const router = new Router({ allowHeaders: ["X-Auth-Token"] })
+		const router = new Router({ allowHeaders: ["contentType", "authorization", "xAuthToken"], catch: false })
 		router.add("POST", "/test", async (request: http.Request) => request.url.pathname)
 		expect(
 			await router.handle(

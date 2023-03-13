@@ -10,7 +10,7 @@ export class Route<T> {
 		readonly middleware: http.Middleware
 	) {}
 	async handle(request: http.Request, context: T): Promise<http.Response | any> {
-		return this.middleware(request, async request => await this.handler(request, context))
+		return this.middleware(request, async request => http.Response.create(await this.handler(request, context)))
 	}
 	match(request: http.Request, ...alternatePrefix: string[]): http.Request | undefined {
 		let path = request.url.pathname
