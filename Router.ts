@@ -14,7 +14,11 @@ export class Router<T> {
 	add(method: http.Method | http.Method[], pattern: URLPattern | string, handler: Handler<T>) {
 		this.routes.push(Route.create(method, pattern, handler))
 	}
-	async handle(request: http.Request.Like | http.Request, context: T): Promise<http.Response> {
+	async handle(
+		request: http.Request.Like | http.Request,
+		context: T,
+		middleware?: (request: http.Request, context: T) => Promise<void> | void
+	): Promise<http.Response> {
 		let result: http.Response
 		if (http.Request.is(request)) {
 			let response: http.Response.Like | undefined
@@ -23,6 +27,7 @@ export class Router<T> {
 				const r = route.match(request, ...this.alternatePrefix)
 				if (r)
 					if (route.methods.some(m => m == request.method)) {
+						await middleware?.(r, context)
 						response = await route.handler(r, context)
 						break
 					} else
