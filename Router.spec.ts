@@ -27,6 +27,39 @@ describe("Router", () => {
 			status: 200,
 		})
 	})
+	it("handle exception", async () => {
+		const router = new Router({ catch: true })
+		router.add("GET", "/test", async (request: http.Request) => {
+			throw new Error("Error thrown on line 42")
+		})
+		expect(await router.handle(new Request("https://example.com/test"), {})).toEqual(
+			new Response("Error: Error thrown on line 42", {
+				headers: { "Access-Control-Allow-Origin": "undefined", "Content-Type": "text/plain" },
+				status: 500,
+				statusText: "Internal Server Error",
+			})
+		)
+	})
+	// {
+	// 		size: 0,
+	// 		timeout: 0,
+	// 		body: {
+	// 			data: [91, 111, 98, 106, 101, 99, 116, 32, 79, 98, 106, 101, 99, 116, 93],
+	// 			type: "Buffer",
+	// 		},
+	// 		disturbed: false,
+	// 		error: null,
+	// 		counter: undefined,
+	// 		headers: {
+	// 			map: {
+	// 				"Access-Control-Allow-Origin": ["undefined"],
+	// 				"Content-Type": ["text/plain"],
+	// 			},
+	// 		},
+	// 		status: 500,
+	// 		statusText: "Internal Server Error",
+	// 		url: undefined,
+	// 	}
 	it("handle options", async () => {
 		const router = new Router({ catch: false })
 		router.add("GET", "/test", async (request: http.Request) => request.url.pathname)
