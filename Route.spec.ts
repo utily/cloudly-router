@@ -18,6 +18,22 @@ describe("Route", () => {
 			parameter: {},
 		})
 	})
+	it("match trailing /", () => {
+		const route = Route.create("GET", "/test", async (request: any) => request.url, undefined)
+		const request = http.Request.create("https://example.com/test/")
+		expect(route.match(request)).toEqual({
+			...request,
+			parameter: {},
+		})
+	})
+	it("match trailing / parameter", () => {
+		const route = Route.create("GET", "/test/:id", async (request: any) => request.url, undefined)
+		const request = http.Request.create("https://example.com/test/asdf/")
+		expect(route.match(request)).toEqual({
+			...request,
+			parameter: { id: "asdf" },
+		})
+	})
 	it("match alternatePrefix", () => {
 		const route = Route.create("GET", "/test", async (request: any) => request.url, undefined)
 		const request = http.Request.create("https://example.com/api/test")
