@@ -31,12 +31,13 @@ export class Router<T> {
 			} catch (error) {
 				result =
 					typeof this.options.catch == "function"
-						? this.options.catch(error)
-						: {
+						? http.Response.create(this.options.catch(error))
+						: http.Response.create({
 								status: 500,
-								header: { contentType: "text/plain" },
-								body: (error && typeof error == "object" && error.toString()) || undefined,
-						  }
+								type: "unknown error",
+								error: "exception",
+								description: (typeof error == "object" && error && error.toString()) || undefined,
+						  })
 			}
 		else
 			result = await process()
@@ -81,7 +82,7 @@ export class Router<T> {
 				},
 			}
 		} else if (request instanceof Request)
-			result = await http.Response.to(await this.handle(await http.Request.from(request, "none"), context), "none")
+			result = await http.Response.to(await this.handle(await http.Request.from(request, "none"), context))
 		else
 			result = await this.handle(http.Request.create(request), context)
 		return result
@@ -94,6 +95,6 @@ export namespace Router {
 		readonly origin: (string | RegExp)[]
 		readonly allowHeaders: (keyof http.Request.Header | string)[]
 		readonly middleware: http.Middleware
-		readonly catch: boolean | ((exception: unknown) => http.Response)
+		readonly catch: boolean | ((exception: unknown) => http.Response.Like)
 	}
 }

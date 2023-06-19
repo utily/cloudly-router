@@ -1,6 +1,8 @@
 import "isomorphic-fetch"
 import { http } from "cloudly-http"
+import { Blob } from "fetch-blob"
 import { Router } from "./index"
+globalThis.Blob = Blob
 
 describe("Router", () => {
 	it("create", () => {
@@ -27,17 +29,32 @@ describe("Router", () => {
 			status: 200,
 		})
 	})
+	it("handle global request", async () => {
+		const router = new Router({ catch: true })
+		router.add("GET", "/test", async (request: http.Request) => {
+			return { body: "body", status: 201 }
+		})
+		expect(await router.handle(new Request("https://example.com/test"), {})).toEqual(
+			new Response(`body`, {
+				headers: { "Access-Control-Allow-Origin": "undefined", "Content-Type": "text/plain; charset=utf-8" },
+				status: 201,
+			})
+		)
+	})
 	it("handle exception", async () => {
 		const router = new Router({ catch: true })
 		router.add("GET", "/test", async (request: http.Request) => {
 			throw new Error("Error thrown on line 42")
 		})
 		expect(await router.handle(new Request("https://example.com/test"), {})).toEqual(
-			new Response("Error: Error thrown on line 42", {
-				headers: { "Access-Control-Allow-Origin": "undefined", "Content-Type": "text/plain" },
-				status: 500,
-				statusText: "Internal Server Error",
-			})
+			new Response(
+				`{"status":500,"type":"unknown error","error":"exception","description":"Error: Error thrown on line 42"}`,
+				{
+					headers: { "Access-Control-Allow-Origin": "undefined", "Content-Type": "application/json; charset=utf-8" },
+					status: 500,
+					statusText: "Internal Server Error",
+				}
+			)
 		)
 	})
 	it("handle options", async () => {
