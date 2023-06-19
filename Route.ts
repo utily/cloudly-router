@@ -14,6 +14,8 @@ export class Route<T> {
 	}
 	match(request: http.Request, ...alternatePrefix: string[]): http.Request | undefined {
 		let path = request.url.pathname
+		if (path.endsWith("/"))
+			path = path.substring(0, path.length - 1)
 		const prefix = alternatePrefix.find(prefix => path.startsWith(prefix))
 		if (prefix)
 			path = path.substring(prefix.length)
