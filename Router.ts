@@ -1,9 +1,11 @@
 import { http } from "cloudly-http"
 import { Handler } from "./Handler"
 import { Route } from "./Route"
+import { Schedule as RouterSchedule } from "./Schedule"
 
 export class Router<T> {
 	private readonly routes: Route<T>[] = []
+	readonly schedule = new Router.Schedule<T>()
 	private readonly options: Router.Options
 	constructor(options?: Partial<Router.Options>) {
 		this.options = {
@@ -90,6 +92,8 @@ export class Router<T> {
 }
 
 export namespace Router {
+	export const Schedule = RouterSchedule
+	export type Schedule<T> = RouterSchedule<T>
 	export interface Options {
 		readonly alternatePrefix: string[]
 		readonly origin: (string | RegExp)[]
