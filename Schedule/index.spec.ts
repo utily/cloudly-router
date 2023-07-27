@@ -21,7 +21,8 @@ describe.each(events)("scheduled", (event: typeof events[number]) => {
 	const secondHandler = jest.fn(async () => event.response ?? false)
 	router.schedule.add([cron], { hours: [14, [4, 6]] }, firstHandler)
 	router.schedule.add([cron], { hours: [3, 5] }, secondHandler)
-	router.schedule.handle(event)
+	router.schedule.add([cron], { hours: [3, 5] }, async (event: Router.Schedule.Event) => true)
+	router.schedule.handle(event, {})
 	it(`${event.name} event`, () => {
 		expect(firstHandler).toBeCalledTimes(event.expect?.firstCalls ?? 0)
 		expect(secondHandler).toBeCalledTimes(event.expect?.secondCalls ?? 0)

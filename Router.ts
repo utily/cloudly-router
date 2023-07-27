@@ -5,7 +5,7 @@ import { Schedule as RouterSchedule } from "./Schedule"
 
 export class Router<T> {
 	private readonly routes: Route<T>[] = []
-	readonly schedule = new Router.Schedule<T>()
+	readonly schedule = new RouterSchedule<T>()
 	private readonly options: Router.Options
 	constructor(options?: Partial<Router.Options>) {
 		this.options = {
@@ -92,8 +92,11 @@ export class Router<T> {
 }
 
 export namespace Router {
-	export const Schedule = RouterSchedule
 	export type Schedule<T> = RouterSchedule<T>
+	export namespace Schedule {
+		export const Event = RouterSchedule.Event
+		export type Event = RouterSchedule.Event
+	}
 	export interface Options {
 		readonly alternatePrefix: string[]
 		readonly origin: (string | RegExp)[]
