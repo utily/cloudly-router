@@ -5,25 +5,25 @@ import { TimeSlot as ScheduleTimeSlot } from "./TimeSlot"
 type Action<T> = {
 	cron: string[]
 	timetable: Schedule.Timetable
-	handler: ScheduleExecutor<T>
+	handle: ScheduleExecutor<T>
 }
 
 export class Schedule<T> {
 	private readonly actions: Action<T>[] = []
-	async handle(scheduled: Schedule.Event.Scheduled, context?: T): Promise<void> {
+	async handle(scheduled: Schedule.Event.Scheduled, context: T): Promise<void> {
 		const event = Schedule.Event.from(scheduled)
 		for (const action of this.actions) {
 			if (
 				action.cron.some(c => c == event.cron) &&
 				Schedule.Timetable.check(action.timetable, event.date) &&
-				(await action.handler(event, context))
+				(await action.handle(event, context))
 			) {
 				break
 			}
 		}
 	}
-	add(cron: string[], timetable: Schedule.Timetable, handler: ScheduleExecutor<T>): void {
-		this.actions.push({ cron, timetable, handler })
+	add(cron: string[], timetable: Schedule.Timetable, handle: ScheduleExecutor<T>): void {
+		this.actions.push({ cron, timetable, handle })
 	}
 }
 
