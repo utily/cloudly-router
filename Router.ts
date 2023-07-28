@@ -25,7 +25,7 @@ export class Router<T> {
 	) {
 		this.routes.push(Route.create(method, pattern, handler, middleware ?? this.options.middleware))
 	}
-	private async catch(process: () => Promise<http.Response>): Promise<http.Response> {
+	private async catch(process: () => Promise<http.Response>, allowOrigin: string | undefined): Promise<http.Response> {
 		let result: http.Response
 		if (this.options.catch)
 			try {
@@ -36,6 +36,9 @@ export class Router<T> {
 						? http.Response.create(this.options.catch(error))
 						: http.Response.create({
 								status: 500,
+								header: {
+									accessControlAllowOrigin: allowOrigin,
+								},
 								type: "unknown error",
 								error: "exception",
 								description: (typeof error == "object" && error && error.toString()) || undefined,
@@ -55,8 +58,9 @@ export class Router<T> {
 				return r ? [...result, [r, route]] : result
 			}, [])
 			const match = matches.find(([request, route]) => route.methods.some(m => m == request.method))
+			const allowOrigin = this.getOrigin(request)
 			result = match
-				? await this.catch(() => match[1].handle(match[0], context))
+				? await this.catch(() => match[1].handle(match[0], context), allowOrigin)
 				: matches.length == 0
 				? http.Response.create({ status: 404 })
 				: request.method == "OPTIONS"
@@ -72,15 +76,7 @@ export class Router<T> {
 				...result,
 				header: {
 					...result.header,
-					accessControlAllowOrigin: this.options.origin.some(origin =>
-						origin == "*"
-							? "*"
-							: typeof origin == "string"
-							? origin == request.header.origin
-							: request.header.origin && origin.test(request.url.origin)
-					)
-						? request.header.origin
-						: "",
+					accessControlAllowOrigin: allowOrigin,
 				},
 			}
 		} else if (request instanceof Request)
@@ -88,6 +84,17 @@ export class Router<T> {
 		else
 			result = await this.handle(http.Request.create(request), context)
 		return result
+	}
+
+	private getOrigin(request: http.Request): string | undefined {
+		return this.options.origin.some(
+			origin =>
+				origin == "*" ||
+				(typeof origin != "string" && origin.test(request.url.origin)) ||
+				origin == request.header.origin
+		)
+			? request.header.origin
+			: undefined
 	}
 }
 

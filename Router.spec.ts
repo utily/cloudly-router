@@ -27,6 +27,19 @@ describe("Router", () => {
 			status: 200,
 		})
 	})
+	it("handle exception", async () => {
+		const router = new Router({ catch: true })
+		router.add("GET", "/test", async (request: http.Request) => {
+			throw new Error("error thrown on line 42")
+		})
+		expect(await router.handle(http.Request.create("https://example.com/test"), {})).toEqual({
+			body: "/test",
+			header: {
+				contentType: "text/plain; charset=utf-8",
+			},
+			status: 200,
+		})
+	})
 	it("handle options", async () => {
 		const router = new Router({ catch: false })
 		router.add("GET", "/test", async (request: http.Request) => request.url.pathname)
