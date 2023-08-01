@@ -85,13 +85,16 @@ describe("Router", () => {
 		router.add("POST", "/test", async (request: http.Request) => request.url.pathname)
 		const notFound: Router.Fallback = {
 			notFound: async (request: http.Request, context) =>
-				http.Response.create({
-					status: 404,
-					body: {
-						error: `No endpoint found with url "${request.url}"`,
-						description: `Please use url "${request.url.origin}/test" and method "POST"`,
+				http.Response.create(
+					{
+						status: 404,
+						body: {
+							error: `No endpoint found with url "${request.url}"`,
+							description: `Please use url "${request.url.origin}/test" and method "POST"`,
+						},
 					},
-				}),
+					"application/json"
+				),
 		}
 		expect(
 			await router.handle(
