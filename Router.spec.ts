@@ -122,4 +122,38 @@ describe("Router", () => {
 			},
 		})
 	})
+	it("fallback", async () => {
+		const router = new Router({ allowHeaders: ["contentType", "authorization", "xAuthToken"], catch: false })
+		router.add("POST", "/test", async (request: http.Request) => request.url.pathname)
+		const notFound: Router.Fallback = {
+			notFound: async (request: http.Request, context) =>
+				http.Response.create(
+					{
+						status: 404,
+						body: {
+							error: `No endpoint found with url "${request.url}"`,
+							description: `Please use url "${request.url.origin}/test" and method "POST"`,
+						},
+					},
+					"application/json; charset=utf-8"
+				),
+		}
+		expect(
+			await router.handle(
+				http.Request.create({
+					method: "OPTIONS",
+					url: "https://example.com/notFound",
+				}),
+				{},
+				notFound
+			)
+		).toEqual({
+			body: {
+				description: 'Please use url "https://example.com/test" and method "POST"',
+				error: 'No endpoint found with url "https://example.com/notFound"',
+			},
+			header: { accessControlAllowOrigin: undefined, contentType: "application/json; charset=utf-8" },
+			status: 404,
+		})
+	})
 })
