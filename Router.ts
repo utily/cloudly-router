@@ -25,21 +25,25 @@ export class Router<T> {
 	) {
 		this.routes.push(Route.create(method, pattern, handler, middleware ?? this.options.middleware))
 	}
-	private async catch(process: () => Promise<http.Response>): Promise<http.Response> {
+	private async catch(request: http.Request, process: () => Promise<http.Response>): Promise<http.Response> {
 		let result: http.Response
 		if (this.options.catch)
 			try {
 				result = await process()
 			} catch (error) {
-				result =
+				result = await this.options.middleware(request, async () =>
 					typeof this.options.catch == "function"
-						? http.Response.create(this.options.catch(error))
-						: http.Response.create({
-								status: 500,
-								type: "unknown error",
-								error: "exception",
-								description: (typeof error == "object" && error && error.toString()) || undefined,
-						  })
+						? http.Response.create(this.options.catch(error), "application/json; charset=utf-8")
+						: http.Response.create(
+								{
+									status: 500,
+									type: "unknown error",
+									error: "exception",
+									description: (typeof error == "object" && error && error.toString()) || undefined,
+								},
+								"application/json; charset=utf-8"
+						  )
+				)
 			}
 		else
 			result = await process()
@@ -64,7 +68,7 @@ export class Router<T> {
 			}, [])
 			const match = matches.find(([request, route]) => route.methods.some(m => m == request.method))
 			result = match
-				? await this.catch(() => match[1].handle(match[0], context))
+				? await this.catch(match[0], () => match[1].handle(match[0], context))
 				: matches.length == 0
 				? (await fallback?.notFound(request, context)) ?? http.Response.create({ status: 404 })
 				: request.method == "OPTIONS"
@@ -91,12 +95,12 @@ export class Router<T> {
 						: "",
 				},
 			}
-		} else if (request instanceof Request)
-			result = await http.Response.to(
-				await this.handle(await http.Request.from(request, "none"), context, fallback),
-				"none"
-			)
-		else
+		} else if (request instanceof Request) {
+			const temp = await this.handle(await http.Request.from(request, "none"), context, fallback)
+			const tamp2 = http.Response.is(temp)
+			console.log(tamp2)
+			result = await http.Response.to(temp, "none")
+		} else
 			result = await this.handle(http.Request.create(request), context, fallback)
 		return result
 	}
