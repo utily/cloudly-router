@@ -45,16 +45,16 @@ export class Router<T> {
 			result = await process()
 		return result
 	}
-	async handle(request: Request, context: T, fallback?: Router.Fallback): Promise<Response>
+	async handle(request: Request, context: T, fallback?: Router.Fallback<T>): Promise<Response>
 	async handle(
 		request: http.Request.Like | http.Request,
 		context: T,
-		fallback?: Router.Fallback
+		fallback?: Router.Fallback<T>
 	): Promise<http.Response>
 	async handle(
 		request: http.Request.Like | http.Request | Request,
 		context: T,
-		fallback?: Router.Fallback
+		fallback?: Router.Fallback<T>
 	): Promise<http.Response | Response> {
 		let result: http.Response | Response
 		if (http.Request.is(request)) {
@@ -100,7 +100,9 @@ export class Router<T> {
 }
 
 export namespace Router {
-	export type Fallback = { notFound: InstanceType<typeof Router>["handle"] }
+	export type Fallback<T = unknown> = {
+		notFound: (request: http.Request, context: T) => Promise<http.Response>
+	}
 	export type Schedule<T> = RouterSchedule<T>
 	export namespace Schedule {
 		export const Event = RouterSchedule.Event
