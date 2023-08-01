@@ -45,9 +45,17 @@ export class Router<T> {
 			result = await process()
 		return result
 	}
-	async handle(request: http.Request.Like | http.Request, context: T): Promise<http.Response>
-	async handle(request: Request, context: T): Promise<Response>
-	async handle(request: http.Request.Like | http.Request | Request, context: T): Promise<http.Response | Response> {
+	async handle(request: Request, context: T, fallback?: Router.Fallback<T>): Promise<Response>
+	async handle(
+		request: http.Request.Like | http.Request,
+		context: T,
+		fallback?: Router.Fallback<T>
+	): Promise<http.Response>
+	async handle(
+		request: http.Request.Like | http.Request | Request,
+		context: T,
+		fallback?: Router.Fallback<T>
+	): Promise<http.Response | Response> {
 		let result: http.Response | Response
 		if (http.Request.is(request)) {
 			const matches = this.routes.reduce<[http.Request, Route<T>][]>((result, route) => {
@@ -58,7 +66,7 @@ export class Router<T> {
 			result = match
 				? await this.catch(() => match[1].handle(match[0], context))
 				: matches.length == 0
-				? http.Response.create({ status: 404 })
+				? (await fallback?.notFound(request, context)) ?? http.Response.create({ status: 404 })
 				: request.method == "OPTIONS"
 				? http.Response.create({
 						status: 204,
@@ -92,6 +100,9 @@ export class Router<T> {
 }
 
 export namespace Router {
+	export type Fallback<T = unknown> = {
+		notFound: (request: http.Request, context: T) => Promise<http.Response>
+	}
 	export type Schedule<T> = RouterSchedule<T>
 	export namespace Schedule {
 		export const Event = RouterSchedule.Event
