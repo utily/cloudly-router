@@ -93,7 +93,7 @@ describe("Router", () => {
 							description: `Please use url "${request.url.origin}/test" and method "POST"`,
 						},
 					},
-					"application/json"
+					"application/json; charset=utf-8"
 				),
 		}
 		expect(
