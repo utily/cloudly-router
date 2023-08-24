@@ -1,6 +1,8 @@
 import "isomorphic-fetch"
 import { http } from "cloudly-http"
+import { Blob } from "fetch-blob"
 import { Router } from "./index"
+globalThis.Blob = Blob
 
 describe("Router", () => {
 	it("create", () => {
@@ -113,5 +115,24 @@ describe("Router", () => {
 			header: { accessControlAllowOrigin: undefined, contentType: "application/json; charset=utf-8" },
 			status: 404,
 		})
+	})
+	it("caught error", async () => {
+		const router = new Router({ allowHeaders: ["contentType", "authorization", "xAuthToken"], catch: true })
+		router.add("GET", "/test", async (request: http.Request) => {
+			throw new Error("Test Error")
+		})
+		expect(await (await router.handle(new Request("https://example.com/test"), {})).json()).toEqual({
+			description: "Error: Test Error",
+			error: "exception",
+			status: 500,
+			type: "unknown error",
+		})
+	})
+	it("working endpoint", async () => {
+		const router = new Router({ allowHeaders: ["contentType", "authorization", "xAuthToken"], catch: true })
+		router.add("GET", "/test", async (request: http.Request) => {
+			return { test: "test" }
+		})
+		expect(await (await router.handle(new Request("https://example.com/test"), {})).json()).toEqual({ test: "test" })
 	})
 })
