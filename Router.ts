@@ -95,12 +95,12 @@ export class Router<T> {
 						: "",
 				},
 			}
-		} else if (request instanceof Request) {
-			const temp = await this.handle(await http.Request.from(request, "none"), context, fallback)
-			const tamp2 = http.Response.is(temp)
-			console.log(tamp2)
-			result = await http.Response.to(temp, "none")
-		} else
+		} else if (request instanceof Request)
+			result = await http.Response.to(
+				await this.handle(await http.Request.from(request, "none"), context, fallback),
+				"none"
+			)
+		else
 			result = await this.handle(http.Request.create(request), context, fallback)
 		return result
 	}
