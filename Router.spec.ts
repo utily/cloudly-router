@@ -118,10 +118,14 @@ describe("Router", () => {
 	})
 	it("caught error", async () => {
 		const router = new Router({ allowHeaders: ["contentType", "authorization", "xAuthToken"], catch: true })
-		router.add("GET", "/test", async (request: http.Request) => {
+		router.add("POST", "/test", async (request: http.Request) => {
 			throw new Error("Test Error")
 		})
-		expect(await (await router.handle(new Request("https://example.com/test"), {})).json()).toEqual({
+		expect(
+			await (
+				await router.handle(new Request("https://example.com/test", { method: "POST", body: JSON.stringify({}) }), {})
+			).json()
+		).toEqual({
 			description: "Error: Test Error",
 			error: "exception",
 			status: 500,
@@ -130,9 +134,13 @@ describe("Router", () => {
 	})
 	it("working endpoint", async () => {
 		const router = new Router({ allowHeaders: ["contentType", "authorization", "xAuthToken"], catch: true })
-		router.add("GET", "/test", async (request: http.Request) => {
+		router.add("POST", "/test", async (request: http.Request) => {
 			return { test: "test" }
 		})
-		expect(await (await router.handle(new Request("https://example.com/test"), {})).json()).toEqual({ test: "test" })
+		expect(
+			await (
+				await router.handle(new Request("https://example.com/test", { method: "POST", body: JSON.stringify({}) }), {})
+			).json()
+		).toEqual({ test: "test" })
 	})
 })
