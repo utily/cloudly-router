@@ -56,7 +56,7 @@
 		"semver": "7.5.3"
 	},
 	"dependencies": {
-		"cloudly-http": "^0.2.0-alpha.13",
+		"cloudly-http": "^0.2.0-alpha.16",
 		"urlpattern-polyfill": "^6.0.2"
 	},
 	"devDependencies": {

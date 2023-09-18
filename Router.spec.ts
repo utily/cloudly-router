@@ -143,4 +143,15 @@ describe("Router", () => {
 			).json()
 		).toEqual({ test: "test" })
 	})
+	it("empty body", async () => {
+		const router = new Router({
+			catch: true,
+			alternatePrefix: [],
+			allowHeaders: ["contentType", "authorization", "organization", "account", "realm", "cursor", "limit"],
+		})
+		router.add("GET", "/test", async (request: http.Request) => undefined)
+		expect(await (await router.handle(new Request("https://example.com/test", { method: "GET" }), {})).text()).toEqual(
+			""
+		)
+	})
 })
