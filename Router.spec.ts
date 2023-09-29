@@ -156,4 +156,42 @@ describe("Router", () => {
 			status: 404,
 		})
 	})
+	it("caught error", async () => {
+		const router = new Router({ allowHeaders: ["contentType", "authorization", "xAuthToken"], catch: true })
+		router.add("POST", "/test", async (request: http.Request) => {
+			throw new Error("Test Error")
+		})
+		expect(
+			await (
+				await router.handle(new Request("https://example.com/test", { method: "POST", body: JSON.stringify({}) }), {})
+			).json()
+		).toEqual({
+			description: "Error: Test Error",
+			error: "exception",
+			status: 500,
+			type: "unknown error",
+		})
+	})
+	it("working endpoint", async () => {
+		const router = new Router({ allowHeaders: ["contentType", "authorization", "xAuthToken"], catch: true })
+		router.add("POST", "/test", async (request: http.Request) => {
+			return { test: "test" }
+		})
+		expect(
+			await (
+				await router.handle(new Request("https://example.com/test", { method: "POST", body: JSON.stringify({}) }), {})
+			).json()
+		).toEqual({ test: "test" })
+	})
+	it("empty body", async () => {
+		const router = new Router({
+			catch: true,
+			alternatePrefix: [],
+			allowHeaders: ["contentType", "authorization", "organization", "account", "realm", "cursor", "limit"],
+		})
+		router.add("GET", "/test", async (request: http.Request) => undefined)
+		expect(await (await router.handle(new Request("https://example.com/test", { method: "GET" }), {})).text()).toEqual(
+			""
+		)
+	})
 })

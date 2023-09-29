@@ -13,13 +13,9 @@ export class Schedule<T> {
 	async handle(scheduled: Schedule.Event.Scheduled, context: T): Promise<void> {
 		const event = Schedule.Event.from(scheduled)
 		for (const action of this.actions) {
-			if (
-				action.cron.some(c => c == event.cron) &&
+			action.cron.some(c => c == event.cron) &&
 				Schedule.Timetable.check(action.timetable, event.date) &&
 				(await action.handle(event, context))
-			) {
-				break
-			}
 		}
 	}
 	add(cron: string[], timetable: Schedule.Timetable, handle: ScheduleExecutor<T>): void {

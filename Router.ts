@@ -31,7 +31,7 @@ export class Router<T> {
 			try {
 				result = await process()
 			} catch (error) {
-				result =
+				result = await http.Serializer.serialize(
 					typeof this.options.catch == "function"
 						? http.Response.create(this.options.catch(error), "application/json; charset=utf-8")
 						: http.Response.create(
@@ -91,9 +91,12 @@ export class Router<T> {
 				},
 			}
 		} else if (request instanceof Request)
-			result = await http.Response.to(await this.handle(await http.Request.from(request, "none"), context), "none")
+			result = await http.Response.to(
+				await this.handle(await http.Request.from(request, "none"), context, fallback),
+				"none"
+			)
 		else
-			result = await this.handle(http.Request.create(request), context)
+			result = await this.handle(http.Request.create(request), context, fallback)
 		return result
 	}
 
