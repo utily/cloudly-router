@@ -33,16 +33,19 @@ export class Router<T> {
 			} catch (error) {
 				result =
 					typeof this.options.catch == "function"
-						? http.Response.create(this.options.catch(error))
-						: http.Response.create({
-								status: 500,
-								header: {
-									accessControlAllowOrigin: allowOrigin,
+						? http.Response.create(this.options.catch(error), "application/json; charset=utf-8")
+						: http.Response.create(
+								{
+									status: 500,
+									header: {
+										accessControlAllowOrigin: allowOrigin,
+									},
+									type: "unknown error",
+									error: "exception",
+									description: (typeof error == "object" && error && error.toString()) || undefined,
 								},
-								type: "unknown error",
-								error: "exception",
-								description: (typeof error == "object" && error && error.toString()) || undefined,
-						  })
+								"application/json; charset=utf-8"
+						  )
 			}
 		else
 			result = await process()
