@@ -46,6 +46,7 @@ export class Router<T> {
 								},
 								"application/json; charset=utf-8"
 						  )
+				)
 			}
 		else
 			result = await process()
