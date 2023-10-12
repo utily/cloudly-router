@@ -89,8 +89,6 @@ export class Router<T extends object> {
 				return r ? [...result, [r, route]] : result
 			}, [])
 			const match = matches.find(([request, route]) => route.methods.some(m => m == request.method))
-			const t = !match ? undefined : typeof context == "function" ? context(match[0]) : context
-			t
 			result = match
 				? await this.catch(() => match[1].handle(match[0], typeof context == "function" ? context(match[0]) : context))
 				: matches.length == 0
