@@ -49,34 +49,16 @@ export class Router<T extends object> {
 			result = await process()
 		return result
 	}
-	async handle(request: Request, context: T, fallback?: Router.Fallback<T>): Promise<Response>
-	async handle(
-		request: Request,
-		factory: (request: http.Request) => T,
-		fallback?: Router.Fallback<T>
-	): Promise<Response>
 	async handle(
 		request: Request,
 		context: T | ((request: http.Request) => T),
 		fallback?: Router.Fallback<T>
 	): Promise<Response>
-
-	async handle(
-		request: http.Request.Like | http.Request,
-		context: T,
-		fallback?: Router.Fallback<T>
-	): Promise<http.Response>
-	async handle(
-		request: http.Request.Like | http.Request,
-		factory: (request: http.Request) => T,
-		fallback?: Router.Fallback<T>
-	): Promise<http.Response>
 	async handle(
 		request: http.Request.Like | http.Request,
 		context: T | ((request: http.Request) => T),
 		fallback?: Router.Fallback<T>
 	): Promise<http.Response>
-
 	async handle(
 		request: http.Request.Like | http.Request | Request,
 		context: T | ((request: http.Request) => T),
