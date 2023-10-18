@@ -56,7 +56,7 @@
 		"semver": "7.5.3"
 	},
 	"dependencies": {
-		"cloudly-http": "^0.2.0-alpha.16",
+		"cloudly-http": "^0.2.0-alpha.17",
 		"urlpattern-polyfill": "^6.0.2"
 	},
 	"devDependencies": {
@@ -65,12 +65,12 @@
 		"@typescript-eslint/eslint-plugin": "5.59.9",
 		"@typescript-eslint/parser": "5.59.9",
 		"eslint": "^8.42.0",
-		"eslint-plugin-prettierx": "github:utily/eslint-plugin-prettierx#utily-20221229",
+		"eslint-plugin-prettierx": "github:utily/eslint-plugin-prettierx#utily-20231004",
 		"eslint-plugin-simple-import-sort": "^10.0.0",
 		"formdata-polyfill": "^4.0.10",
 		"isomorphic-fetch": "^3.0.0",
 		"jest": "^29.5.0",
-		"prettierx": "github:utily/prettierx#utily-20221229",
+		"prettierx": "github:utily/prettierx#utily-20231004",
 		"rimraf": "^4.4.0",
 		"ts-jest": "^29.0.5",
 		"typescript": "^4.9.5"

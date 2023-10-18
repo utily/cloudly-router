@@ -3,7 +3,7 @@ import { Handler } from "./Handler"
 import { Route } from "./Route"
 import { Schedule as RouterSchedule } from "./Schedule"
 
-export class Router<T> {
+export class Router<T extends object> {
 	private readonly routes: Route<T>[] = []
 	readonly schedule = new RouterSchedule<T>()
 	private readonly options: Router.Options
@@ -49,15 +49,19 @@ export class Router<T> {
 			result = await process()
 		return result
 	}
-	async handle(request: Request, context: T, fallback?: Router.Fallback<T>): Promise<Response>
+	async handle(
+		request: Request,
+		context: T | ((request: http.Request) => T),
+		fallback?: Router.Fallback<T>
+	): Promise<Response>
 	async handle(
 		request: http.Request.Like | http.Request,
-		context: T,
+		context: T | ((request: http.Request) => T),
 		fallback?: Router.Fallback<T>
 	): Promise<http.Response>
 	async handle(
 		request: http.Request.Like | http.Request | Request,
-		context: T,
+		context: T | ((request: http.Request) => T),
 		fallback?: Router.Fallback<T>
 	): Promise<http.Response | Response> {
 		let result: http.Response | Response
@@ -68,9 +72,10 @@ export class Router<T> {
 			}, [])
 			const match = matches.find(([request, route]) => route.methods.some(m => m == request.method))
 			result = match
-				? await this.catch(() => match[1].handle(match[0], context))
+				? await this.catch(() => match[1].handle(match[0], typeof context == "function" ? context(match[0]) : context))
 				: matches.length == 0
-				? (await fallback?.notFound(request, context)) ?? http.Response.create({ status: 404 })
+				? (await fallback?.notFound(request, typeof context == "function" ? context(request) : context)) ??
+				  http.Response.create({ status: 404 })
 				: request.method == "OPTIONS"
 				? http.Response.create({
 						status: 204,
