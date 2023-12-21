@@ -5,7 +5,7 @@ export interface TimeSlot {
 }
 
 export namespace TimeSlot {
-	const getFunctions = { days: "getDay", hours: "getHours", minutes: "getMinutes" } as const
+	const getFunctions = { days: "getUTCDay", hours: "getUTCHours", minutes: "getUTCMinutes" } as const
 	export function check(timetable: TimeSlot, date: Date): boolean {
 		return Object.entries(timetable).every((e: ["days" | "hours" | "minutes", (number | TimeSlot.Interval)[]]) => {
 			const quantity = date[getFunctions[e[0]]]()
