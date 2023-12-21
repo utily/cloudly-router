@@ -2,15 +2,15 @@ import { Router } from "../index"
 
 const cron = "5 * * * *"
 
-const scheduledTimeFirst = new Date().setHours(14)
-const scheduledTimeSecond = new Date().setHours(3)
-const scheduledTimeBoth = new Date().setHours(5)
+const scheduledTimeFirst = new Date().setUTCHours(14)
+const scheduledTimeSecond = new Date().setUTCHours(3)
+const scheduledTimeBoth = new Date().setUTCHours(5)
 
 const events = [
 	{ name: "first", scheduledTime: scheduledTimeFirst, cron, expect: { firstCalls: 1, secondCalls: 0 } },
 	{ name: "second", scheduledTime: scheduledTimeSecond, cron, expect: { firstCalls: 0, secondCalls: 1 } },
 	{ name: "third", scheduledTime: scheduledTimeBoth, cron, expect: { firstCalls: 1, secondCalls: 1 } },
-	{ name: "fourth", scheduledTime: new Date().setHours(2), cron, expect: { firstCalls: 0, secondCalls: 0 } },
+	{ name: "fourth", scheduledTime: new Date().setUTCHours(2), cron, expect: { firstCalls: 0, secondCalls: 0 } },
 	{ name: "fifth", scheduledTime: scheduledTimeFirst, cron: "* * * * *" },
 ]
 
