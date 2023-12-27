@@ -17,8 +17,8 @@
 	"editor.formatOnSave": true,
 	"editor.formatOnPaste": true,
 	"editor.codeActionsOnSave": {
-		"source.fixAll.eslint": true,
-		"eslint.autoFixOnSave": true,
+		"source.fixAll.eslint": "explicit",
+		"eslint.autoFixOnSave": "explicit"
 	},
 	"eslint.format.enable": true,
 	"eslint.lintTask.enable": true,
