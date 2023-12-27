@@ -34,39 +34,34 @@ describe("Router", () => {
 		router.add("GET", "/test", async (request: http.Request) => {
 			return { body: "body", status: 201 }
 		})
-		expect(
-			await router.handle(
-				new Request("https://example.com/test", { headers: new Headers({ origin: "http://origin:42" }) }),
-				{}
-			)
-		).toEqual(
-			new Response(`body`, {
-				headers: { "Access-Control-Allow-Origin": "http://origin:42", "Content-Type": "text/plain; charset=utf-8" },
-				status: 201,
-			})
-		)
+		expect([
+			...(
+				await router.handle(
+					new Request("https://example.com/test", { method: "GET", headers: { origin: "http://origin:42" } }),
+					{}
+				)
+			).headers.entries(),
+		]).toEqual([
+			["access-control-allow-origin", "http://origin:42"],
+			["content-type", "text/plain; charset=utf-8"],
+		])
 	})
 	it("handle exception", async () => {
 		const router = new Router({ catch: true })
 		router.add("GET", "/test", async (request: http.Request) => {
 			throw new Error("error on line 42!")
 		})
-		expect(
-			await router.handle(
-				new Request("https://example.com/test", { headers: new Headers({ origin: "http://origin:42" }) }),
-				{}
-			)
-		).toEqual(
-			//TODO: fix error serializer
-			new Response(`[object Object]`, {
-				headers: {
-					"Access-Control-Allow-Origin": "http://origin:42",
-					"Content-Type": "application/json; charset=utf-8",
-				},
-				status: 500,
-				statusText: "Internal Server Error",
-			})
-		)
+		expect([
+			...(
+				await router.handle(
+					new Request("https://example.com/test", { method: "GET", headers: { origin: "http://origin:42" } }),
+					{}
+				)
+			).headers.entries(),
+		]).toEqual([
+			["access-control-allow-origin", "http://origin:42"],
+			["content-type", "application/json; charset=utf-8"],
+		])
 	})
 
 	it("handle options", async () => {

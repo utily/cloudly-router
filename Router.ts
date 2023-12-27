@@ -76,7 +76,10 @@ export class Router<T extends object> {
 			const match = matches.find(([request, route]) => route.methods.some(m => m == request.method))
 			const allowOrigin = this.getOrigin(request)
 			result = match
-				? await this.catch(() => match[1].handle(match[0], typeof context == "function" ? context(match[0]) : context), allowOrigin)
+				? await this.catch(
+						() => match[1].handle(match[0], typeof context == "function" ? context(match[0]) : context),
+						allowOrigin
+				  )
 				: matches.length == 0
 				? (await fallback?.notFound(request, typeof context == "function" ? context(request) : context)) ??
 				  http.Response.create({ status: 404 })
