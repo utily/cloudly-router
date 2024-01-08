@@ -29,6 +29,41 @@ describe("Router", () => {
 			status: 200,
 		})
 	})
+	it("handle global request", async () => {
+		const router = new Router({ catch: true })
+		router.add("GET", "/test", async (request: http.Request) => {
+			return { body: "body", status: 201 }
+		})
+		expect([
+			...(
+				await router.handle(
+					new Request("https://example.com/test", { method: "GET", headers: { origin: "http://origin:42" } }),
+					{}
+				)
+			).headers.entries(),
+		]).toEqual([
+			["access-control-allow-origin", "http://origin:42"],
+			["content-type", "text/plain; charset=utf-8"],
+		])
+	})
+	it("handle exception", async () => {
+		const router = new Router({ catch: true })
+		router.add("GET", "/test", async (request: http.Request) => {
+			throw new Error("error on line 42!")
+		})
+		expect([
+			...(
+				await router.handle(
+					new Request("https://example.com/test", { method: "GET", headers: { origin: "http://origin:42" } }),
+					{}
+				)
+			).headers.entries(),
+		]).toEqual([
+			["access-control-allow-origin", "http://origin:42"],
+			["content-type", "application/json; charset=utf-8"],
+		])
+	})
+
 	it("handle options", async () => {
 		const router = new Router({ catch: false })
 		router.add("GET", "/test", async (request: http.Request) => request.url.pathname)
