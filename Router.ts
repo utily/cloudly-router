@@ -68,7 +68,14 @@ export class Router<T extends object> {
 		fallback?: Router.Fallback<T>
 	): Promise<http.Response | Response> {
 		let result: http.Response | Response
-		if (http.Request.is(request)) {
+		if (request instanceof Request)
+			result = await http.Response.to(
+				await this.handle(await http.Request.from(request, "none"), context, fallback),
+				"none"
+			)
+		else if (!http.Request.is(request))
+			result = await this.handle(http.Request.create(request), context, fallback)
+		else {
 			const matches = this.routes.reduce<[http.Request, Route<T>][]>((result, route) => {
 				const r = route.match(request, ...this.options.alternatePrefix)
 				return r ? [...result, [r, route]] : result
@@ -99,13 +106,7 @@ export class Router<T extends object> {
 					accessControlAllowOrigin: allowOrigin,
 				},
 			}
-		} else if (request instanceof Request)
-			result = await http.Response.to(
-				await this.handle(await http.Request.from(request, "none"), context, fallback),
-				"none"
-			)
-		else
-			result = await this.handle(http.Request.create(request), context, fallback)
+		}
 		return result
 	}
 
