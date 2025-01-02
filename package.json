@@ -1,0 +1,60 @@
+{
+	"name": "cloudly-router",
+	"version": "0.2.0-alpha.17",
+	"description": "Router for web worker based backends such as CloudFlare Workers.",
+	"author": "Simon Mika <simon@mika.se>",
+	"license": "MIT",
+	"repository": "https://github.com/utily/cloudly-http",
+	"bugs": {
+		"url": "https://github.com/utily/cloudly-http/issues"
+	},
+	"homepage": "https://github.com/utily/cloudly-http",
+	"private": false,
+	"type": "module",
+	"module": "./dist/mjs/index.js",
+	"types": "./dist/types/index.d.ts",
+	"exports": {
+		".": {
+			"import": {
+				"default": "./dist/mjs/index.js",
+				"types": "./dist/types/index.d.ts"
+			},
+			"require": {
+				"default": "./dist/cjs/index.js",
+				"types": "./dist/types/index.d.ts"
+			}
+		}
+	},
+	"git": {
+		"tagName": "v${version}"
+	},
+	"github": {
+		"release": true
+	},
+	"scripts": {
+		"lint": "eslint --max-warnings=0 '**/*.{ts,tsx}'",
+		"fix": "eslint '**/*.{ts,tsx}' --fix",
+		"build": "rimraf dist/* && tsc -p tsconfig.mjs.json && tsc -p tsconfig.cjs.json",
+		"test": "vitest --run",
+		"coverage": "vitest --coverage",
+		"prepare": "npm run build",
+		"clean": "rimraf dist node_modules coverage",
+		"verify": "npm run build && npm run test && npm run lint && npm audit"
+	},
+	"devDependencies": {
+		"@typescript-eslint/eslint-plugin": "8.18.1",
+		"@typescript-eslint/parser": "8.18.1",
+		"@vitest/coverage-istanbul": "^2.1.8",
+		"eslint": "^8.57.0",
+		"eslint-plugin-prettierx": "github:utily/eslint-plugin-prettierx#utily-20231004",
+		"eslint-plugin-simple-import-sort": "^12.1.1",
+		"prettierx": "github:utily/prettierx#utily-20231004",
+		"rimraf": "^6.0.1",
+		"typescript": "^5.7.2",
+		"vitest": "^2.1.8"
+	},
+	"dependencies": {
+		"cloudly-http": "utily/cloudly-http#update-config",
+		"urlpattern-polyfill": "^10.0.0"
+	}
+}
