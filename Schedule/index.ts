@@ -12,11 +12,9 @@ export class Schedule<T> {
 	private readonly actions: Action<T>[] = []
 	async handle(scheduled: Schedule.Event.Scheduled, context: T): Promise<void> {
 		const event = Schedule.Event.from(scheduled)
-		for (const action of this.actions) {
-			action.cron.some(c => c == event.cron) &&
-				Schedule.Timetable.check(action.timetable, event.date) &&
-				(await action.handle(event, context))
-		}
+		for (const action of this.actions)
+			if (action.cron.some(c => c == event.cron) && Schedule.Timetable.check(action.timetable, event.date))
+				await action.handle(event, context)
 	}
 	add(cron: string[], timetable: Schedule.Timetable, handle: ScheduleExecutor<T>): void {
 		this.actions.push({ cron, timetable, handle })

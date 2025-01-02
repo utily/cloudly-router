@@ -37,9 +37,7 @@ export class Router<T extends object> {
 						: http.Response.create(
 								{
 									status: 500,
-									header: {
-										accessControlAllowOrigin: allowOrigin,
-									},
+									header: { accessControlAllowOrigin: allowOrigin },
 									type: "unknown error",
 									error: "exception",
 									description: (typeof error == "object" && error && error.toString()) || undefined,

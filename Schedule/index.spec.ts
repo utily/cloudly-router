@@ -16,8 +16,8 @@ const events = [
 
 describe.each(events)("scheduled", (event: typeof events[number]) => {
 	const router = new Router()
-	const firstHandler = jest.fn(async () => undefined)
-	const secondHandler = jest.fn(async () => undefined)
+	const firstHandler = vitest.fn(async () => undefined)
+	const secondHandler = vitest.fn(async () => undefined)
 	router.schedule.add([cron], { hours: [14, [4, 6]] }, firstHandler)
 	router.schedule.add([cron], { hours: [3, 5] }, secondHandler)
 	router.schedule.handle(event, {})

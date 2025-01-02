@@ -1,8 +1,5 @@
-import "isomorphic-fetch"
 import { http } from "cloudly-http"
-import { Blob } from "fetch-blob"
 import { Router } from "./index"
-globalThis.Blob = Blob
 
 describe("Router", () => {
 	it("create", () => {
@@ -10,12 +7,7 @@ describe("Router", () => {
 		router.add("GET", "/test", async (request: http.Request) => request.url.pathname)
 		expect(router).toMatchObject({
 			options: { origin: ["*"] },
-			routes: [
-				{
-					pattern: { pathname: "/test" },
-					methods: ["GET"],
-				},
-			],
+			routes: [{ pattern: { pathname: "/test" }, methods: ["GET"] }],
 		})
 	})
 	it("handle", async () => {
@@ -23,24 +15,22 @@ describe("Router", () => {
 		router.add("GET", "/test", async (request: http.Request) => request.url.pathname)
 		expect(await router.handle(http.Request.create("https://example.com/test"), {})).toEqual({
 			body: "/test",
-			header: {
-				contentType: "text/plain; charset=utf-8",
-			},
+			header: { contentType: "text/plain; charset=utf-8" },
 			status: 200,
 		})
 	})
 	it("handle global request", async () => {
 		const router = new Router({ catch: true })
-		router.add("GET", "/test", async (request: http.Request) => {
-			return { body: "body", status: 201 }
-		})
+		router.add("GET", "/test", async (request: http.Request) => ({ body: "body", status: 201 }))
 		expect([
 			...(
-				await router.handle(
-					new Request("https://example.com/test", { method: "GET", headers: { origin: "http://origin:42" } }),
-					{}
-				)
-			).headers.entries(),
+				(
+					await router.handle(
+						new Request("https://example.com/test", { method: "GET", headers: { origin: "http://origin:42" } }),
+						{}
+					)
+				).headers as any
+			).entries(),
 		]).toEqual([
 			["access-control-allow-origin", "http://origin:42"],
 			["content-type", "text/plain; charset=utf-8"],
@@ -53,11 +43,13 @@ describe("Router", () => {
 		})
 		expect([
 			...(
-				await router.handle(
-					new Request("https://example.com/test", { method: "GET", headers: { origin: "http://origin:42" } }),
-					{}
-				)
-			).headers.entries(),
+				(
+					await router.handle(
+						new Request("https://example.com/test", { method: "GET", headers: { origin: "http://origin:42" } }),
+						{}
+					)
+				).headers as any
+			).entries(),
 		]).toEqual([
 			["access-control-allow-origin", "http://origin:42"],
 			["content-type", "application/json; charset=utf-8"],
@@ -134,14 +126,7 @@ describe("Router", () => {
 				),
 		}
 		expect(
-			await router.handle(
-				http.Request.create({
-					method: "OPTIONS",
-					url: "https://example.com/notFound",
-				}),
-				{},
-				notFound
-			)
+			await router.handle(http.Request.create({ method: "OPTIONS", url: "https://example.com/notFound" }), {}, notFound)
 		).toEqual({
 			body: {
 				description: 'Please use url "https://example.com/test" and method "POST"',
@@ -160,12 +145,7 @@ describe("Router", () => {
 			await (
 				await router.handle(new Request("https://example.com/test", { method: "POST", body: JSON.stringify({}) }), {})
 			).json()
-		).toEqual({
-			description: "Error: Test Error",
-			error: "exception",
-			status: 500,
-			type: "unknown error",
-		})
+		).toEqual({ description: "Error: Test Error", error: "exception", status: 500, type: "unknown error" })
 	})
 	it("working endpoint", async () => {
 		const router = new Router({ allowHeaders: ["contentType", "authorization", "xAuthToken"], catch: true })
