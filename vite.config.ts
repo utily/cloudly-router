@@ -4,7 +4,13 @@ import { defineConfig } from "vite"
 export default defineConfig({
 	test: {
 		typecheck: { tsconfig: "./tsconfig.json" },
-		coverage: { reporter: ["text", "json", "html"], provider: "istanbul" },
+		coverage: {
+			reporter: ["text", "json", "html"],
+			enabled: true,
+			all: true,
+			cleanOnRerun: true,
+			thresholds: { statements: 35, branches: 80, functions: 50, lines: 35 },
+		},
 		globals: true,
 		include: ["**/*.spec.[tj]s"],
 		testTimeout: 20000,
