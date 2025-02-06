@@ -1,4 +1,5 @@
 import { http } from "cloudly-http"
+import { Endpoint as RouterEndpoint } from "./Endpoint"
 import { Handler } from "./Handler"
 import { Route } from "./Route"
 import { Schedule as RouterSchedule } from "./Schedule"
@@ -119,9 +120,14 @@ export class Router<T extends object> {
 			? request.header.origin
 			: undefined
 	}
+
+	endpoint(endpoint: RouterEndpoint<T>): void {
+		this.add(endpoint.method, endpoint.path, endpoint.execute)
+	}
 }
 
 export namespace Router {
+	export import Endpoint = RouterEndpoint
 	export type Fallback<T = unknown> = {
 		notFound: (request: http.Request, context: T) => Promise<http.Response>
 	}
