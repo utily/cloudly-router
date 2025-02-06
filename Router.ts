@@ -3,11 +3,13 @@ import { Endpoint as RouterEndpoint } from "./Endpoint"
 import { Handler } from "./Handler"
 import { Route } from "./Route"
 import { Schedule as RouterSchedule } from "./Schedule"
+import { schema } from "./schema"
 
 export class Router<T extends object> {
 	private readonly routes: Route<T>[] = []
 	readonly schedule = new RouterSchedule<T>()
 	private readonly options: Router.Options
+	private readonly endpoints: Router.Endpoint<T>[] = []
 	constructor(options?: Partial<Router.Options>) {
 		this.options = {
 			alternatePrefix: [],
@@ -122,7 +124,21 @@ export class Router<T extends object> {
 	}
 
 	endpoint(endpoint: RouterEndpoint<T>): void {
+		this.endpoints.push(endpoint)
 		this.add(endpoint.method, endpoint.path, endpoint.execute)
+	}
+	docs(path: string, settings: { url: string; title: string; version: string }) {
+		this.add("GET", path, async () => {
+			const result: schema.OpenAPI = {
+				info: { title: settings.title, version: settings.version },
+				servers: [{ url: settings.url }],
+				openapi: "3.1.0",
+				paths: this.endpoints.reduce<schema.Paths>((result, endpoint) => {
+					return { ...result, [endpoint.path]: { ...RouterEndpoint.schemaify(endpoint), ...result[endpoint.path] } }
+				}, {}),
+			}
+			return result
+		})
 	}
 }
 
