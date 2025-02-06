@@ -4,7 +4,10 @@
 	"description": "Router for web worker based backends such as CloudFlare Workers.",
 	"author": "Simon Mika <simon@mika.se>",
 	"license": "MIT",
-	"repository": "https://github.com/utily/cloudly-http",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/utily/cloudly-http.git"
+	},
 	"bugs": {
 		"url": "https://github.com/utily/cloudly-http/issues"
 	},
