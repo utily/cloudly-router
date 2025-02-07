@@ -216,7 +216,7 @@ export namespace schema {
 		unevaluatedProperties?: undefined | Schema
 		xml?: undefined | XML
 	}
-	export type Schema =  SchemaObject
+	export type Schema = SchemaObject
 
 	export interface SecurityRequirement {
 		[name: string]: string[]
