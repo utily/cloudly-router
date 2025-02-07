@@ -1,8 +1,26 @@
 import "isomorphic-fetch"
 import { http } from "cloudly-http"
-import { Router } from "./index"
+import { isly } from "isly"
+import { Endpoint, Router } from "./index"
 
 describe("cloud-router", () => {
+	it("", () => {
+		const fetch = Endpoint.add({
+			title: "Create Card",
+			description: "",
+			path: "",
+			method: "POST",
+			request: {
+				parameters: { id: isly.number() },
+				body: isly.number().array(),
+			},
+			execute: (request, context: { a: string }): any => {
+				request.body
+				request.parameters.id
+				return context.a || request
+			},
+		})
+	})
 	it("create router", () => {
 		const router = new Router()
 		expect(router).toMatchObject({})
