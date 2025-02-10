@@ -1,12 +1,16 @@
 import { http } from "cloudly-http"
+import { isly } from "isly"
+import { Endpoint as RouterEndpoint } from "./Endpoint"
 import { Handler } from "./Handler"
 import { Route } from "./Route"
 import { Schedule as RouterSchedule } from "./Schedule"
+import { schema } from "./schema"
 
 export class Router<T extends object> {
 	private readonly routes: Route<T>[] = []
 	readonly schedule = new RouterSchedule<T>()
 	private readonly options: Router.Options
+	private readonly endpoints: Router.Endpoint<T, any, any, any, any>[] = []
 	constructor(options?: Partial<Router.Options>) {
 		this.options = {
 			alternatePrefix: [],
@@ -119,9 +123,57 @@ export class Router<T extends object> {
 			? request.header.origin
 			: undefined
 	}
+
+	declare<
+		S extends Record<string, any> | undefined,
+		P extends Record<string, any> | undefined,
+		H extends Record<keyof http.Request.Header, any> | undefined,
+		B
+	>(endpoint: Router.Endpoint<T, S, P, H, B>): void {
+		this.endpoints.push(endpoint)
+
+		const doer = async (request: http.Request, context: T) => {
+			let result: any
+			// TODO: return errors
+
+			if (!Router.Endpoint.isParameters<P>(Object.entries(endpoint.request.parameters ?? {}), request.parameter))
+				return
+			if (!Router.Endpoint.isParameters<S>(Object.entries(endpoint.request.search ?? {}), request.search))
+				return
+			if (!Router.Endpoint.isParameters<H>(Object.entries(endpoint.request.headers ?? {}), request.header))
+				return
+			const body = await request.body
+			if (endpoint.request.body && !endpoint.request.body.is(body)) {
+				return // flawed content
+			}
+			const parsed: Router.Endpoint.Request<S, P, H, B> = {
+				body,
+				headers: request.header,
+				search: request.search,
+				parameters: request.parameter,
+			}
+			return await endpoint.execute(parsed, context)
+		}
+
+		this.add(endpoint.method, endpoint.path, doer)
+	}
+	docs(path: string, settings: { url: string; title: string; version: string }) {
+		this.add("GET", path, async () => {
+			const result: schema.OpenAPI = {
+				info: { title: settings.title, version: settings.version },
+				servers: [{ url: settings.url }],
+				openapi: "3.1.0",
+				paths: this.endpoints.reduce<schema.Paths>((result, endpoint) => {
+					return { ...result, [endpoint.path]: { ...Router.Endpoint.schemaify(endpoint), ...result[endpoint.path] } }
+				}, {}),
+			}
+			return result
+		})
+	}
 }
 
 export namespace Router {
+	export import Endpoint = RouterEndpoint
 	export type Fallback<T = unknown> = {
 		notFound: (request: http.Request, context: T) => Promise<http.Response>
 	}
