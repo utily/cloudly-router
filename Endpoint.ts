@@ -4,9 +4,9 @@ import { schema } from "./schema"
 
 export interface Endpoint<
 	C,
-	S extends Record<string, any> = Record<string, never>,
-	P extends Record<string, any> = Record<string, never>,
-	H extends Record<keyof http.Request.Header, any> = Record<keyof http.Request.Header, never>,
+	S extends Record<string, any> | undefined = Record<string, never>,
+	P extends Record<string, any> | undefined = Record<string, never>,
+	H extends Record<keyof http.Request.Header, any> | undefined = Record<keyof http.Request.Header, never>,
 	B = never
 > {
 	title: string
@@ -23,10 +23,16 @@ export interface Endpoint<
 	execute: (request: Endpoint.Request<S, P, H, B>, context: C) => any
 }
 export namespace Endpoint {
+	export function isParameters<P extends Record<string, any> | undefined>(
+		checkers: [string, isly.Type<P[keyof P]>][],
+		parameters: any
+	): parameters is P {
+		return parameters && checkers.every(([name, checker]) => checker.is(parameters[name]))
+	}
 	export interface Request<
-		S extends Record<string, any> = Record<string, any>,
-		P extends Record<string, any> = Record<string, any>,
-		H extends Record<keyof http.Request.Header, any> = Record<keyof http.Request.Header, any>,
+		S extends Record<string, any> | undefined = Record<string, any>,
+		P extends Record<string, any> | undefined = Record<string, any>,
+		H extends Record<keyof http.Request.Header, any> | undefined = Record<keyof http.Request.Header, any>,
 		B = any
 	> {
 		search: S

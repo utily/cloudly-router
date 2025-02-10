@@ -1,6 +1,6 @@
 import { http } from "cloudly-http"
 import { isly } from "isly"
-import { Endpoint, Endpoint as RouterEndpoint } from "./Endpoint"
+import { Endpoint as RouterEndpoint } from "./Endpoint"
 import { Handler } from "./Handler"
 import { Route } from "./Route"
 import { Schedule as RouterSchedule } from "./Schedule"
@@ -125,47 +125,34 @@ export class Router<T extends object> {
 	}
 
 	declare<
-		S extends Record<string, any> = Record<string, never>,
-		P extends Record<string, any> = Record<string, never>,
-		H extends Record<keyof http.Request.Header, any> = Record<keyof http.Request.Header, never>,
-		B = never
-	>(endpoint: Endpoint<T, S, P, H, B>): void {
+		S extends Record<string, any> | undefined,
+		P extends Record<string, any> | undefined,
+		H extends Record<keyof http.Request.Header, any> | undefined,
+		B
+	>(endpoint: Router.Endpoint<T, S, P, H, B>): void {
 		this.endpoints.push(endpoint)
 
 		const doer = async (request: http.Request, context: T) => {
 			let result: any
 			// TODO: return errors
-			// TODO: fix the types
-			const path: P = (endpoint.request.parameters &&
-				Object.fromEntries(
-					Object.entries(endpoint.request.parameters).map(
-						([name, value]) => [name, value.get(endpoint.request.parameters?.[name])] as [string, P[string]]
-					)
-				)) as P
-			const headers: H = (endpoint.request.headers &&
-				Object.fromEntries(
-					Object.entries(endpoint.request.headers).map(([name, value]) => [
-						name,
-						value.get(endpoint.request.headers?.[name]),
-					])
-				)) as H
-			const search: S = (endpoint.request.search &&
-				Object.fromEntries(
-					Object.entries(endpoint.request.search).map(([name, value]) => [
-						name,
-						value.get(endpoint.request.search?.[name]),
-					])
-				)) as S
-			const body: Endpoint.Request["body"] = endpoint.request.body
-				? endpoint.request.body.get(await request.body)
-				: undefined
-			const thingy: Endpoint.Request<S, P, H, B> = {
-				body,
-				headers: headers,
-				search: search,
-				parameters: path,
+
+			if (!Router.Endpoint.isParameters<P>(Object.entries(endpoint.request.parameters ?? {}), request.parameter))
+				return
+			if (!Router.Endpoint.isParameters<S>(Object.entries(endpoint.request.search ?? {}), request.search))
+				return
+			if (!Router.Endpoint.isParameters<H>(Object.entries(endpoint.request.headers ?? {}), request.header))
+				return
+			const body = await request.body
+			if (endpoint.request.body && !endpoint.request.body.is(body)) {
+				return // flawed content
 			}
-			return await endpoint.execute(thingy, context)
+			const parsed: Router.Endpoint.Request<S, P, H, B> = {
+				body,
+				headers: request.header,
+				search: request.search,
+				parameters: request.parameter,
+			}
+			return await endpoint.execute(parsed, context)
 		}
 
 		this.add(endpoint.method, endpoint.path, doer)
@@ -177,7 +164,7 @@ export class Router<T extends object> {
 				servers: [{ url: settings.url }],
 				openapi: "3.1.0",
 				paths: this.endpoints.reduce<schema.Paths>((result, endpoint) => {
-					return { ...result, [endpoint.path]: { ...RouterEndpoint.schemaify(endpoint), ...result[endpoint.path] } }
+					return { ...result, [endpoint.path]: { ...Router.Endpoint.schemaify(endpoint), ...result[endpoint.path] } }
 				}, {}),
 			}
 			return result
