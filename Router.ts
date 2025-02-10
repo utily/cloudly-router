@@ -1,5 +1,6 @@
 import { http } from "cloudly-http"
-import { Endpoint as RouterEndpoint } from "./Endpoint"
+import { isly } from "isly"
+import { Endpoint, Endpoint as RouterEndpoint } from "./Endpoint"
 import { Handler } from "./Handler"
 import { Route } from "./Route"
 import { Schedule as RouterSchedule } from "./Schedule"
@@ -9,7 +10,7 @@ export class Router<T extends object> {
 	private readonly routes: Route<T>[] = []
 	readonly schedule = new RouterSchedule<T>()
 	private readonly options: Router.Options
-	private readonly endpoints: Router.Endpoint<T>[] = []
+	private readonly endpoints: Router.Endpoint<T, any, any, any, any>[] = []
 	constructor(options?: Partial<Router.Options>) {
 		this.options = {
 			alternatePrefix: [],
@@ -123,9 +124,51 @@ export class Router<T extends object> {
 			: undefined
 	}
 
-	endpoint(endpoint: RouterEndpoint<T>): void {
+	declare<
+		S extends Record<string, any> = Record<string, never>,
+		P extends Record<string, any> = Record<string, never>,
+		H extends Record<keyof http.Request.Header, any> = Record<keyof http.Request.Header, never>,
+		B = never
+	>(endpoint: Endpoint<T, S, P, H, B>): void {
 		this.endpoints.push(endpoint)
-		this.add(endpoint.method, endpoint.path, endpoint.execute)
+
+		const doer = async (request: http.Request, context: T) => {
+			let result: any
+			// TODO: return errors
+			// TODO: fix the types
+			const path: P = (endpoint.request.parameters &&
+				Object.fromEntries(
+					Object.entries(endpoint.request.parameters).map(
+						([name, value]) => [name, value.get(endpoint.request.parameters?.[name])] as [string, P[string]]
+					)
+				)) as P
+			const headers: H = (endpoint.request.headers &&
+				Object.fromEntries(
+					Object.entries(endpoint.request.headers).map(([name, value]) => [
+						name,
+						value.get(endpoint.request.headers?.[name]),
+					])
+				)) as H
+			const search: S = (endpoint.request.search &&
+				Object.fromEntries(
+					Object.entries(endpoint.request.search).map(([name, value]) => [
+						name,
+						value.get(endpoint.request.search?.[name]),
+					])
+				)) as S
+			const body: Endpoint.Request["body"] = endpoint.request.body
+				? endpoint.request.body.get(await request.body)
+				: undefined
+			const thingy: Endpoint.Request<S, P, H, B> = {
+				body,
+				headers: headers,
+				search: search,
+				parameters: path,
+			}
+			return await endpoint.execute(thingy, context)
+		}
+
+		this.add(endpoint.method, endpoint.path, doer)
 	}
 	docs(path: string, settings: { url: string; title: string; version: string }) {
 		this.add("GET", path, async () => {

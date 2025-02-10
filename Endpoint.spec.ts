@@ -2,11 +2,11 @@ import "isomorphic-fetch"
 import { isly } from "isly"
 import { Router } from "./index"
 
-interface Item {
-	id: string
-	value: number
-}
-const itemType = isly.object<Item>({ id: isly.string(), value: isly.number() })
+// interface Item {
+// 	id: string
+// 	value: number
+// }
+// const itemType = isly.object<Item>({ id: isly.string(), value: isly.number() })
 
 describe("Declarative endpoints", () => {
 	const router = new Router<object>()
@@ -15,11 +15,11 @@ describe("Declarative endpoints", () => {
 		description: "Get item by id",
 		method: "GET",
 		path: "/item/:id",
+		request: { search: {}, parameters: { id: isly.string() }, headers: {}, body: isly.undefined() },
 		execute: async () => ({ id: "1", value: 1 }),
-		request: { authentication: [], search: {}, parameters: { id: isly.string() }, headers: {}, body: isly.undefined() },
-		response: { status: 200, headers: {}, body: itemType, description: "item" },
+		// response: { status: 200, headers: {}, body: itemType, description: "item" },
 	}
-	router.endpoint(endpoint)
+	router.declare(endpoint)
 	router.docs("/docs", { title: "Test", url: "http://localhost", version: "1.0.0" })
 	it("should find an endpoint", async () => {
 		const request: Request = new Request("http://localhost/item/1", { method: "GET" })
