@@ -1,46 +1,30 @@
-import "isomorphic-fetch"
 import { http } from "cloudly-http"
 import { Route } from "./Route"
 
 describe("Route", () => {
 	it("create", () => {
 		const route = Route.create("GET", "/test", async (request: any) => request.url, undefined)
-		expect(route).toMatchObject({
-			pattern: {},
-			methods: ["GET"],
-		})
+		expect(route).toMatchObject({ pattern: {}, methods: ["GET"] })
 	})
 	it("match", () => {
 		const route = Route.create("GET", "/test", async (request: any) => request.url, undefined)
 		const request = http.Request.create("https://example.com/test")
-		expect(route.match(request)).toEqual({
-			...request,
-			parameter: {},
-		})
+		expect(route.match(request)).toEqual({ ...request, parameter: {} })
 	})
 	it("match trailing /", () => {
 		const route = Route.create("GET", "/test", async (request: any) => request.url, undefined)
 		const request = http.Request.create("https://example.com/test/")
-		expect(route.match(request)).toEqual({
-			...request,
-			parameter: {},
-		})
+		expect(route.match(request)).toEqual({ ...request, parameter: {} })
 	})
 	it("match trailing / parameter", () => {
 		const route = Route.create("GET", "/test/:id", async (request: any) => request.url, undefined)
 		const request = http.Request.create("https://example.com/test/asdf/")
-		expect(route.match(request)).toEqual({
-			...request,
-			parameter: { id: "asdf" },
-		})
+		expect(route.match(request)).toEqual({ ...request, parameter: { id: "asdf" } })
 	})
 	it("match alternatePrefix", () => {
 		const route = Route.create("GET", "/test", async (request: any) => request.url, undefined)
 		const request = http.Request.create("https://example.com/api/test")
-		expect(route.match(request, "/api")).toEqual({
-			...request,
-			parameter: {},
-		})
+		expect(route.match(request, "/api")).toEqual({ ...request, parameter: {} })
 	})
 	it("match repeating group with a minimum of one", () => {
 		const route = Route.create("GET", "/test/:id/:trailingPath+", async (request: any) => request.url, undefined)

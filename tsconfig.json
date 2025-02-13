@@ -1,15 +1,50 @@
 {
-	"extends": "./tsconfig.test.json",
 	"compilerOptions": {
+		// https://www.totaltypescript.com/tsconfig-cheat-sheet
+		/* transpiling */
+		"lib": [
+			"ES2023",
+			"webworker"
+		],
+		"moduleResolution": "node10",
+		"module": "ESNext",
+		// where mjs is omitted. point package.json `exports` (import) / `module` field to these
+		"outDir": "dist/mjs",
 		"declaration": true,
 		"sourceMap": true,
-		"sourceRoot": "../",
-		"outDir": "dist",
+		/* base options */
+		"esModuleInterop": true,
+		"skipLibCheck": true,
+		"target": "ES2022",
+		"allowJs": true,
+		"resolveJsonModule": true,
+		/* strictness */
+		"strict": true,
+		"alwaysStrict": true,
+		"noImplicitAny": true,
+		"noImplicitOverride": true,
+		"noUncheckedIndexedAccess": true,
+		"strictNullChecks": true,
+		"noImplicitThis": true,
+		/* other */
+		// where types are omitted. point package.json `exports` (import and require) / `types` field to these
+		"declarationDir": "./dist/types",
+		"allowSyntheticDefaultImports": true,
+		"removeComments": true,
+		"preserveConstEnums": true,
+		"forceConsistentCasingInFileNames": true,
 		"baseUrl": ".",
-		"allowSyntheticDefaultImports":true,
-		"types": []
+		"types": [
+			"vitest/globals"
+		]
 	},
+	"include": [
+		"**/*.spec.ts",
+	],
 	"files": [
-		"index.ts",
-	]
+		"index.ts"
+	],
+	"typeAcquisition": {
+		"enable": true
+	}
 }
