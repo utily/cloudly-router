@@ -1,4 +1,4 @@
-import { Definition as EndpointDefinition } from "../Definition"
+import { Definition as EndpointDefinition } from "./Endpoint/Definition"
 
 export interface Definition {
 	name: string

@@ -1,5 +1,4 @@
 import { http } from "cloudly-http"
-import { Group as _Group } from "./Group"
 import { Request as _Request } from "./Request"
 
 export interface Endpoint<
@@ -19,7 +18,6 @@ export interface Endpoint<
 	execute: (request: Endpoint.Request<S, P, H, B>, context: C) => any
 }
 export namespace Endpoint {
-	export import Group = _Group
 	export import Request = _Request
 }
 

@@ -52,13 +52,6 @@
 		"prepare": "npm run build",
 		"clean": "rimraf dist node_modules coverage"
 	},
-	"dependencies": {
-		"cloudly-http": "^0.2.0-alpha.20",
-		"gracely": "^2.0.9",
-		"isly": "^0.1.26",
-		"typedly": "^0.0.26",
-		"urlpattern-polyfill": "^10.0.0"
-	},
 	"devDependencies": {
 		"@types/isomorphic-fetch": "0.0.39",
 		"@types/jest": "^29.5.14",
@@ -74,5 +67,12 @@
 		"rimraf": "^6.0.1",
 		"ts-jest": "^29.2.5",
 		"typescript": "^4.9.5"
+	},
+	"dependencies": {
+		"cloudly-http": "^0.2.0-alpha.20",
+		"gracely": "^2.0.9",
+		"isly": "^1.0.1-alpha.7",
+		"typedly": "^0.0.26",
+		"urlpattern-polyfill": "^10.0.0"
 	}
 }
