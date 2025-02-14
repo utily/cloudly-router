@@ -19,7 +19,7 @@ export namespace Request {
 	export import Configuration = _Configuration
 	export import Definition = _Definition
 	export function verify<
-		C extends Configuration<S, P, H, B>, // Configuration
+		C extends Configuration<S, P, H, B>, // Endpoint configuration
 		S extends Record<string, any> = Record<string, never>, // Search Parameter names & types
 		P extends Record<string, any> = Record<string, never>, // Path parameter names & types
 		H extends Record<keyof http.Request.Header, any> = Record<keyof http.Request.Header, never>, // Header types
