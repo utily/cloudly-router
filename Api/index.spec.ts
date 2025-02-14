@@ -7,6 +7,8 @@ describe("router.Api", () => {
 			a: string
 		}
 		const api = router.Api.create<Context>({ name: "Worker A", description: "" })
+		api.add(router.OpenApi.create(api, "/help"))
+
 		api.add({
 			title: "Create Card",
 			description: "",
