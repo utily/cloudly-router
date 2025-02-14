@@ -19,11 +19,11 @@ export namespace Request {
 	export import Configuration = _Configuration
 	export import Definition = _Definition
 	export function verify<
-		C extends Configuration<S, P, H, B>,
-		S extends Record<string, any> = Record<string, never>,
-		P extends Record<string, any> = Record<string, never>,
-		H extends Record<keyof http.Request.Header, any> = Record<keyof http.Request.Header, never>,
-		B = never
+		C extends Configuration<S, P, H, B>, // Configuration
+		S extends Record<string, any> = Record<string, never>, // Search Parameter names & types
+		P extends Record<string, any> = Record<string, never>, // Path parameter names & types
+		H extends Record<keyof http.Request.Header, any> = Record<keyof http.Request.Header, never>, // Header types
+		B = never // Body type
 	>(configuration: C, request: http.Request): gracely.Error | Request<S, P, H, B> {
 		// TODO:
 		// * support parsing of arguments

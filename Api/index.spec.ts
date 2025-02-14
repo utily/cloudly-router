@@ -1,19 +1,19 @@
 import { isly } from "isly"
 import * as router from "../index"
 
-describe("router.Endpoint", () => {
+describe("router.Api", () => {
 	it("", () => {
 		type Context = {
 			a: string
 		}
-		const group = new router.Endpoint.Group<Context>({ name: "Worker A", description: "" })
-		group.add({
+		const api = router.Api.create<Context>({ name: "Worker A", description: "" })
+		api.add({
 			title: "Create Card",
 			description: "",
 			path: "",
 			method: "POST",
 			request: {
-				parameters: { id: isly.number() },
+				parameters: { id: isly.number().rename("id").describe("4 digit base64 encoded id of card.") },
 				body: isly.number().array(),
 			},
 			execute: (request, context: Context): any => {
@@ -22,8 +22,7 @@ describe("router.Endpoint", () => {
 				return context.a || request
 			},
 		})
-		group.add
-		group.add({
+		api.add({
 			method: "PATCH",
 			path: "/time/:activity/",
 			title: "Update Times",
@@ -45,6 +44,6 @@ describe("router.Endpoint", () => {
 				context.a
 			},
 		})
-		expect(group.definition).toMatchInlineSnapshot()
+		expect(api.definition).toMatchInlineSnapshot()
 	})
 })
