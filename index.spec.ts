@@ -1,10 +1,11 @@
 import { http } from "cloudly-http"
 import { isly } from "isly"
-import { Endpoint, Router } from "./index"
+import { Api, Router } from "./index"
 
 describe("cloud-router", () => {
 	it("", () => {
-		const fetch = Endpoint.add({
+		const api = Api.create<{ a: string }>({}, { description: "", name: "unnamed" })
+		const fetch = api.add({
 			title: "Create Card",
 			description: "",
 			path: "",

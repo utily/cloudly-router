@@ -12,10 +12,10 @@ export class Api<C extends object = object> {
 	}
 	private constructor(readonly router: Router<C>, private readonly details: Omit<Api.Definition, "endpoints">) {}
 	add<
-		S extends Record<string, any> = Record<string, never>,
-		P extends Record<string, any> = Record<string, never>,
-		H extends Record<keyof http.Request.Header, any> = Record<keyof http.Request.Header, never>,
-		B = never
+		S extends Record<string, any>,
+		P extends Record<string, any>,
+		H extends Record<keyof http.Request.Header, any>,
+		B
 	>(endpoint: Api.Endpoint<C, S, P, H, B>): void {
 		this.endpoints.push(endpoint as Api.Endpoint<C>)
 		this.router.add(endpoint.method, endpoint.path, async (request: http.Request, context: C): Promise<any> => {
@@ -27,7 +27,7 @@ export class Api<C extends object = object> {
 		return this.definition
 	}
 	static create<C extends object = object>(
-		router: Router<C> | Router.Options,
+		router: Router<C> | Partial<Router.Options>,
 		details: Omit<Api.Definition, "endpoints"> = { name: "unnamed", description: "" }
 	): Api<C> {
 		return new Api(router instanceof Router ? router : new Router<C>(router), details)

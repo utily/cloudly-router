@@ -21,12 +21,11 @@ export interface Configuration<
 }
 export namespace Configuration {
 	export function toType<
-		C extends Configuration<S, P, H, B>,
 		S extends Record<string, any> = Record<string, never>,
 		P extends Record<string, any> = Record<string, never>,
 		H extends Record<keyof http.Request.Header, any> = Record<keyof http.Request.Header, never>,
 		B = never
-	>(configuration: C): isly.Object<Request<S, P, H, B>> {
+	>(configuration: Configuration<S, P, H, B>): isly.Object<Request<S, P, H, B>> {
 		return isly.object<Request<S, P, H, B>>({
 			search: isly.object(configuration.search ?? ({} as S)),
 			parameters: isly.object(configuration.parameters ?? ({} as P)),

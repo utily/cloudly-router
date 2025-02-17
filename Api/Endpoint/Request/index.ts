@@ -5,10 +5,10 @@ import { Configuration as _Configuration } from "./Configuration"
 import { Definition as _Definition } from "./Definition"
 
 export interface Request<
-	S extends Record<string, any> = Record<string, any>,
-	P extends Record<string, any> = Record<string, any>,
-	H extends Record<keyof http.Request.Header, any> = Record<keyof http.Request.Header, any>,
-	B = any
+	S extends Record<string, any>,
+	P extends Record<string, any>,
+	H extends Record<keyof http.Request.Header, any>,
+	B
 > {
 	search: S
 	parameters: P
@@ -19,12 +19,11 @@ export namespace Request {
 	export import Configuration = _Configuration
 	export import Definition = _Definition
 	export function verify<
-		C extends Configuration<S, P, H, B>, // Endpoint configuration
-		S extends Record<string, any> = Record<string, never>, // Search Parameter names & types
-		P extends Record<string, any> = Record<string, never>, // Path parameter names & types
-		H extends Record<keyof http.Request.Header, any> = Record<keyof http.Request.Header, never>, // Header types
-		B = never // Body type
-	>(configuration: C, request: http.Request): gracely.Error | Request<S, P, H, B> {
+		S extends Record<string, any>, // Search Parameter names & types
+		P extends Record<string, any>, // Path parameter names & types
+		H extends Record<keyof http.Request.Header, any>, // Header types
+		B // Body type
+	>(configuration: Configuration<S, P, H, B>, request: http.Request): gracely.Error | Request<S, P, H, B> {
 		// TODO:
 		// * support parsing of arguments
 		// * return multiple gracely.Errors
@@ -54,6 +53,6 @@ export namespace Request {
 			result.push(gracely.client.flawedContent(flaw as unknown as gracely.Flaw))
 		return result.length > 0
 			? result[1]
-			: Configuration.toType<C, S, P, H, B>(configuration).prune(request) ?? gracely.client.forbidden("invalid request")
+			: Configuration.toType<S, P, H, B>(configuration).prune(request) ?? gracely.client.forbidden("invalid request")
 	}
 }

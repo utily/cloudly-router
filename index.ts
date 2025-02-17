@@ -1,4 +1,4 @@
-import { Endpoint } from "./Api/Endpoint"
+import { Api } from "./Api"
 import { Router } from "./Router"
 
-export { Router, Endpoint }
+export { Router, Api }
