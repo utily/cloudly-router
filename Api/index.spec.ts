@@ -18,10 +18,11 @@ describe("router.Api", () => {
 				parameters: { id: isly.number().rename("id").describe("4 digit base64 encoded id of card.") },
 				body: isly.number().array(),
 			},
+			// response: { body: isly.number().array(), headers: { date: isly.string() } },
 			execute: (request, context: Context): any => {
-				request.body
-				request.parameters.id
-				return context.a || request
+				const body = request.body
+				const id = request.parameters.id
+				return context.a && body && id && request
 			},
 		})
 		api.add({
@@ -40,10 +41,7 @@ describe("router.Api", () => {
 				),
 			},
 			execute: (request, context) => {
-				request.body
-				request.parameters.activity
-				request.body.time
-				context.a
+				return { body: request.body, activity: request.parameters.activity, time: request.body.time, a: context.a }
 			},
 		})
 		expect(api.definition).toMatchInlineSnapshot()

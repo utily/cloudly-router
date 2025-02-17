@@ -5,10 +5,10 @@ import { Configuration as _Configuration } from "./Configuration"
 import { Definition as _Definition } from "./Definition"
 
 export interface Request<
-	S extends Record<string, any>,
-	P extends Record<string, any>,
-	H extends Record<keyof http.Request.Header, any>,
-	B
+	S extends Record<string, any>, //Search parameters
+	P extends Record<string, any>, //Path arguments
+	H extends Record<keyof http.Request.Header, any>, //Headers
+	B //Body
 > {
 	search: S
 	parameters: P
