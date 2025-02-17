@@ -10,7 +10,7 @@ export interface Definition {
 	request: Endpoint.Request.Definition
 }
 export namespace Definition {
-	export function from(endpoint: Endpoint): Definition {
+	export function from<C extends object>(endpoint: Endpoint<C>): Definition {
 		return {
 			title: endpoint.title,
 			description: endpoint.description,

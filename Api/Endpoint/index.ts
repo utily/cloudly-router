@@ -1,12 +1,13 @@
 import { http } from "cloudly-http"
+import { Definition as _Definition } from "./Definition"
 import { Request as _Request } from "./Request"
 
 export interface Endpoint<
-	C extends object = object,
-	S extends Record<string, any> = Record<string, never>,
-	P extends Record<string, any> = Record<string, never>,
-	H extends Record<keyof http.Request.Header, any> = Record<keyof http.Request.Header, never>,
-	B = never
+	C extends object = object, //Context
+	S extends Record<string, any> = Record<string, never>, //Search parameters
+	P extends Record<string, any> = Record<string, never>, //Path arguments
+	H extends Record<keyof http.Request.Header, any> = Record<keyof http.Request.Header, never>, //Headers
+	B = never //Body
 > {
 	// TODO:
 	// * support response type (and verification?)
@@ -19,6 +20,7 @@ export interface Endpoint<
 }
 export namespace Endpoint {
 	export import Request = _Request
+	export import Definition = _Definition
 }
 
 // EXAMPLE:
