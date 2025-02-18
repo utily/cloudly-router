@@ -30,6 +30,13 @@
 				"varsIgnorePattern": "h"
 			}
 		],
+		"@typescript-eslint/no-unused-expressions": [
+			2,
+			{
+				"allowShortCircuit": true,
+				"allowTernary": true
+			}
+		],
 		"@typescript-eslint/explicit-module-boundary-types": "off",
 		"no-case-declarations": "off",
 		"no-inner-declarations": "off",

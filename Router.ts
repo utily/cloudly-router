@@ -100,8 +100,7 @@ export class Router<T extends object> {
 	private match(request: http.Request<any>) {
 		return this.routes.reduce<{ request: http.Request; route: Route<T> }[]>((result, route) => {
 			const match = route.match(request, ...this.options.alternatePrefix)
-			if (match)
-				result.push({ request: match, route })
+			match && result.push({ request: match, route })
 			return result
 		}, [])
 	}
