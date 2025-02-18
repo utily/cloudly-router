@@ -18,13 +18,15 @@ describe("router.Api", () => {
 				parameters: { id: isly.number().rename("id").describe("4 digit base64 encoded id of card.") },
 				body: isly.number().array(),
 			},
-			// response: { body: isly.number().array(), headers: { date: isly.string() } },
-			execute: (request, context: Context): any => {
-				const body = request.body
-				const id = request.parameters.id
-				return context.a && body && id && request
+			response: {
+				body: isly.number().array(),
+				headers: { attempt: isly.number() },
+			},
+			execute: (request, context: Context) => {
+				return { body: [1, 2, 3], headers: { attempt: 2 } }
 			},
 		})
+
 		api.add({
 			method: "PATCH",
 			path: "/time/:activity/",
@@ -40,8 +42,12 @@ describe("router.Api", () => {
 					"Time.Changeable"
 				),
 			},
+			response: {
+				body: isly.number().array(),
+				headers: { attempt: isly.number() },
+			},
 			execute: (request, context) => {
-				return { body: request.body, activity: request.parameters.activity, time: request.body.time, a: context.a }
+				return { body: [1, 2, 3, "da"], headers: { attempt: 2 } }
 			},
 		})
 		expect(api.definition).toMatchInlineSnapshot()

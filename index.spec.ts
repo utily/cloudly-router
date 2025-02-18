@@ -1,26 +1,7 @@
 import { http } from "cloudly-http"
-import { isly } from "isly"
-import { Api, Router } from "./index"
+import { Router } from "./index"
 
 describe("cloud-router", () => {
-	it("", () => {
-		const api = Api.create<{ a: string }>({}, { description: "", name: "unnamed" })
-		const fetch = api.add({
-			title: "Create Card",
-			description: "",
-			path: "",
-			method: "POST",
-			request: {
-				parameters: { id: isly.number() },
-				body: isly.number().array(),
-			},
-			execute: (request, context: { a: string }): any => {
-				request.body
-				request.parameters.id
-				return context.a || request
-			},
-		})
-	})
 	it("create router", () => {
 		const router = new Router()
 		expect(router).toMatchObject({})
