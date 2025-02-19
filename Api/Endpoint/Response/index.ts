@@ -1,4 +1,3 @@
-import { gracely } from "gracely"
 import { http } from "cloudly-http"
 import { Configuration as _Configuration } from "./Configuration"
 import { Definition as _Definition } from "./Definition"
@@ -8,7 +7,7 @@ export interface Response<
 	B //Body
 > {
 	headers: H
-	body: B | gracely.Error
+	body: B
 }
 export namespace Response {
 	export import Configuration = _Configuration

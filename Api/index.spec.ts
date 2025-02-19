@@ -23,7 +23,7 @@ describe("router.Api", () => {
 				headers: { attempt: isly.number() },
 			},
 			execute: (request, context: Context) => {
-				return { body: [1, 2, 3], headers: { attempt: 2 } }
+				return { body: request.body, headers: { attempt: 2 } }
 			},
 		})
 

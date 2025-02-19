@@ -2,7 +2,10 @@ import { http } from "cloudly-http"
 import { isly } from "isly"
 import type { Response } from "."
 
-export interface Configuration<H extends Record<keyof http.Request.Header, any>, B> {
+export interface Configuration<
+	H extends Record<keyof http.Response.Header, any> = Record<keyof http.Response.Header, never>,
+	B = never
+> {
 	headers?: {
 		[N in keyof H]: isly.Type<H[N]>
 	}
@@ -10,7 +13,7 @@ export interface Configuration<H extends Record<keyof http.Request.Header, any>,
 }
 export namespace Configuration {
 	export function toType<
-		H extends Record<keyof http.Request.Header, any> = Record<keyof http.Request.Header, never>,
+		H extends Record<keyof http.Response.Header, any> = Record<keyof http.Response.Header, never>,
 		B = never
 	>(configuration: Configuration<H, B>): isly.Object<Response<H, B>> {
 		return isly.object<Response<H, B>>({

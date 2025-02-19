@@ -1,6 +1,7 @@
 import { http } from "cloudly-http"
 import type { Endpoint } from "."
 import { Request } from "./Request"
+import { Response } from "./Response"
 
 export interface Definition {
 	title: string
@@ -8,6 +9,7 @@ export interface Definition {
 	path: string
 	method: http.Method
 	request: Endpoint.Request.Definition
+	response: Endpoint.Response.Definition
 }
 export namespace Definition {
 	export function from<C extends object>(endpoint: Endpoint<C>): Definition {
@@ -17,6 +19,7 @@ export namespace Definition {
 			path: endpoint.path,
 			method: endpoint.method,
 			request: Request.Definition.from(endpoint.request),
+			response: Response.Definition.from(endpoint.response),
 		}
 	}
 }

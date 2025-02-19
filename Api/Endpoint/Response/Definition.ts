@@ -7,13 +7,13 @@ export interface Definition {
 	body: isly.Definition
 }
 export namespace Definition {
-	export function from(request: Response.Configuration): Definition {
+	export function from(response: Response.Configuration): Definition {
 		return {
 			headers: typedly.Object.map<Record<string, isly.Type>, Record<string, isly.Definition>>(
 				{},
 				([name, type]) => [name, type.definition] as const
 			),
-			body: (request.body ?? isly.undefined()).definition,
+			body: (response.body ?? isly.undefined()).definition,
 		}
 	}
 }
