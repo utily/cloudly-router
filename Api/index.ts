@@ -5,7 +5,7 @@ import { Definition as _Definition } from "./Definition"
 import { Endpoint as _Endpoint } from "./Endpoint"
 
 export class Api<C extends object = object> {
-	private readonly endpoints: Api.Endpoint<C>[]
+	private readonly endpoints: Api.Endpoint<C>[] = []
 	get definition(): Api.Definition {
 		return { ...this.details, endpoints: this.endpoints.map(Api.Endpoint.Definition.from) }
 	}
@@ -18,10 +18,10 @@ export class Api<C extends object = object> {
 		RH extends Record<keyof http.Request.Header, any>,
 		RB
 	>(endpoint: Api.Endpoint<C, S, P, H, B, RH, RB>): void {
-		this.endpoints.push(endpoint as Api.Endpoint<C>)
+		this.endpoints.push(endpoint as any as Api.Endpoint<C>)
 		this.router.add(endpoint.method, endpoint.path, async (request: http.Request, context: C): Promise<any> => {
-			const verified = Api.Endpoint.Request.verify(endpoint.request, request)
-			return gracely.Error.is(verified) ? verified : endpoint.execute(verified, context)
+			const verified = await Api.Endpoint.Request.verify(endpoint.request, request)
+			return gracely.Error.is(verified) ? verified : await endpoint.execute(verified, context)
 		})
 	}
 	toJSON() {

@@ -1,3 +1,4 @@
+import { gracely } from "gracely"
 import { http } from "cloudly-http"
 import { Definition as _Definition } from "./Definition"
 import { Request as _Request } from "./Request"
@@ -20,7 +21,10 @@ export interface Endpoint<
 	method: http.Method
 	request: Endpoint.Request.Configuration<S, P, H, B>
 	response: Endpoint.Response.Configuration<RH, RB>
-	execute: (request: Endpoint.Request<S, P, H, B>, context: C) => Endpoint.Response<RH, RB>
+	execute: (
+		request: Endpoint.Request<S, P, H, B>,
+		context: C
+	) => Promise<Endpoint.Response<RH, RB> | gracely.Error> | Endpoint.Response<RH, RB> | gracely.Error
 }
 export namespace Endpoint {
 	export import Request = _Request

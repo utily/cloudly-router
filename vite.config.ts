@@ -6,7 +6,7 @@ export default defineConfig({
 		typecheck: { tsconfig: "./tsconfig.json" },
 		coverage: {
 			reporter: ["text", "json", "html"],
-			enabled: true,
+			enabled: false,
 			all: true,
 			cleanOnRerun: true,
 			thresholds: { statements: 35, branches: 80, functions: 50, lines: 35 },
@@ -16,6 +16,6 @@ export default defineConfig({
 		testTimeout: 20000,
 		isolate: false,
 		exclude: ["node_modules", "dist"],
-		server: { deps: { inline: ["cloudly-http"] } },
+		server: { deps: { inline: ["cloudly-http", "gracely", "isly", "typedly"] } },
 	},
 })

@@ -11,10 +11,10 @@ export interface Configuration<
 	search?: {
 		[N in keyof S]: isly.Type<S[N]>
 	}
-	parameters?: {
+	parameter?: {
 		[N in keyof P]: isly.Type<P[N]>
 	}
-	headers?: {
+	header?: {
 		[N in keyof H]: isly.Type<H[N]>
 	}
 	body?: isly.Type<B>
@@ -28,8 +28,8 @@ export namespace Configuration {
 	>(configuration: Configuration<S, P, H, B>): isly.Object<Request<S, P, H, B>> {
 		return isly.object<Request<S, P, H, B>>({
 			search: isly.object(configuration.search ?? ({} as S)),
-			parameters: isly.object(configuration.parameters ?? ({} as P)),
-			headers: isly.object(configuration.headers ?? ({} as H)),
+			parameter: isly.object(configuration.parameter ?? ({} as P)),
+			header: isly.object(configuration.header ?? ({} as H)),
 			body: configuration.body ?? (isly.undefined() as isly.Type<B>),
 		})
 	}
