@@ -59,7 +59,7 @@
 	"dependencies": {
 		"cloudly-http": "^0.2.0-alpha.21",
 		"gracely": "^2.0.9",
-		"isly": "^1.0.1-alpha.7",
+		"isly": "^1.0.1-alpha.14",
 		"typedly": "^0.0.26",
 		"urlpattern-polyfill": "^10.0.0"
 	}

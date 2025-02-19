@@ -1,4 +1,5 @@
 import { Api } from "./Api"
+import { OpenApi } from "./OpenApi"
 import { Router } from "./Router"
 
-export { Router, Api }
+export { OpenApi, Api, Router }

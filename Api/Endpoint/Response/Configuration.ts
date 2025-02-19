@@ -10,6 +10,7 @@ export interface Configuration<
 		[N in keyof H]: isly.Type<H[N]>
 	}
 	body?: isly.Type<B>
+	status: isly.Type<number>
 }
 export namespace Configuration {
 	export function toType<
@@ -19,6 +20,7 @@ export namespace Configuration {
 		return isly.object<Response<H, B>>({
 			header: isly.object(configuration.header ?? ({} as H)),
 			body: configuration.body ?? (isly.undefined() as isly.Type<B>),
+			status: configuration.status,
 		})
 	}
 }
