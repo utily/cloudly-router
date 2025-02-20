@@ -35,7 +35,7 @@ export namespace Request {
 				.map(([name, type]) => [name, type.flawed(request.parameter[name])] as const)
 				.map(
 					([name, flaw]): false | gracely.Error =>
-						flaw && gracely.client.invalidQueryArgument(name, flaw.name, flaw.description ?? "", JSON.stringify(flaw))
+						flaw && gracely.client.invalidPathArgument(name, flaw.name, flaw.description ?? "", JSON.stringify(flaw))
 				)
 				.filter((error: false | gracely.Error): error is gracely.Error => !!error)
 		)
