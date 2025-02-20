@@ -9,7 +9,7 @@ export namespace Paths {
 		const sorted = endpoints.reduce<Record<string, Api.Endpoint.Definition[]>>(
 			(r, endpoint) => ({
 				...r,
-				[endpoint.path]: [...(r[endpoint.path] ?? []), endpoint],
+				[convert(endpoint.path)]: [...(r[convert(endpoint.path)] ?? []), endpoint],
 			}),
 			{}
 		)
@@ -20,5 +20,8 @@ export namespace Paths {
 			}),
 			{}
 		)
+	}
+	function convert(httpPath: string): string {
+		return httpPath.replace(/:(\w+)/g, "{$1}")
 	}
 }

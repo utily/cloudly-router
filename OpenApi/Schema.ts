@@ -54,7 +54,7 @@ export namespace Schema {
 		// optional: (type: isly.Optional.Definition, transformer): Schema => transformer.transform(type.base),
 		// readonly: (type: isly.Readonly.Definition, transformer): Schema => transformer.transform(type.base),
 	})
-	export function from(definition: isly.Definition): Schema | undefined {
-		return transformer.transform(definition)
+	export function from(definition: isly.Definition | undefined): Schema | undefined {
+		return definition && transformer.transform(definition)
 	}
 }

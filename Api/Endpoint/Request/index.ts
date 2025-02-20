@@ -13,7 +13,7 @@ export interface Request<
 	search: S
 	parameter: P
 	header: H
-	body: B
+	body?: B
 }
 export namespace Request {
 	export import Configuration = _Configuration

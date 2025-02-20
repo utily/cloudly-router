@@ -5,5 +5,8 @@ export interface Definition {
 	description: string
 	endpoints: EndpointDefinition[]
 	version: `v${number}`
+	collections?: Definition.Collection[]
 }
-export namespace Definition {}
+export namespace Definition {
+	export type Collection = { name: string; description: string }
+}

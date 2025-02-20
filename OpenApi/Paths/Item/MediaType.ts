@@ -1,12 +1,12 @@
 import { isly } from "isly"
 import { Reference } from "../../Reference"
 import { Schema } from "../../Schema"
-import { Encoding, Example } from "./Parameter"
+import { Parameter } from "./Parameter"
 
 export interface MediaType {
-	encoding?: { [propertyName: string]: Encoding }
+	encoding?: { [propertyName: string]: Parameter.Encoding }
 	example?: any
-	examples?: { [key: string]: Example }
+	examples?: { [key: string]: Parameter.Example }
 	schema?: Schema | Reference
 }
 export namespace MediaType {

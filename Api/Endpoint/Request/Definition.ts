@@ -6,7 +6,7 @@ export interface Definition {
 	parameter: Record<string, isly.Definition>
 	search: Record<string, isly.Definition>
 	header: Record<string, isly.Definition>
-	body: isly.Definition
+	body?: isly.Definition
 }
 export namespace Definition {
 	export function from(request: Request.Configuration): Definition {
@@ -23,7 +23,7 @@ export namespace Definition {
 				request.header ?? {},
 				([name, type]) => [name, type.definition] as const
 			),
-			body: (request.body ?? isly.undefined()).definition,
+			body: request.body && request.body.definition,
 		}
 	}
 }

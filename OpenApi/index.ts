@@ -2,9 +2,10 @@ import { Api } from "../Api"
 import { Components } from "./Components"
 import { Info } from "./Info"
 import { Paths } from "./Paths"
+import { Tag } from "./Tag"
 
 export interface OpenApi {
-	components?: undefined | Components
+	components?: Components
 	// externalDocs?: undefined | ExternalDocumentation
 	info: Info
 	jsonSchemaDialect?: string
@@ -12,7 +13,7 @@ export interface OpenApi {
 	paths: Paths
 	// security?: undefined | SecurityRequirement[]
 	servers?: { description?: string; url: string }
-	// tags?: undefined | Tag[]
+	tags?: Tag[]
 	// webhooks?: undefined | { [webhookName: string]: PathItem | Reference }
 }
 export namespace OpenApi {
@@ -24,6 +25,7 @@ export namespace OpenApi {
 			openapi: "3.0.2",
 			paths: Paths.from(definition.endpoints),
 			components: Components.from(definition.endpoints),
+			tags: Tag.from(definition.collections),
 		}
 	}
 }
