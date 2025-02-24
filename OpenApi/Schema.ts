@@ -25,7 +25,7 @@ export interface Schema {
 	unevaluatedProperties?: Schema
 }
 export namespace Schema {
-	const transformer = isly.Definition.Transformer.create<Record<string, Schema>>({
+	const transformer = isly.Definition.Transformer.create<Record<string, Schema | undefined>>({
 		boolean: (type: isly.Boolean.Definition): Schema => ({
 			type: type.class,
 			description: type.description,
@@ -51,8 +51,11 @@ export namespace Schema {
 			description: type.description,
 			items: transformer.transform(type.base),
 		}),
-		// optional: (type: isly.Optional.Definition, transformer): Schema => transformer.transform(type.base),
-		// readonly: (type: isly.Readonly.Definition, transformer): Schema => transformer.transform(type.base),
+		union: (type: isly.Union.Definition, transformer): Schema | undefined => ({
+			oneOf: type.base.flatMap(t => transformer.transform(t) ?? []),
+		}),
+		optional: (type: isly.Optional.Definition, transformer): Schema | undefined => transformer.transform(type.base),
+		readonly: (type: isly.Readonly.Definition, transformer): Schema | undefined => transformer.transform(type.base),
 	})
 	export function from(definition: isly.Definition | undefined): Schema | undefined {
 		return definition && transformer.transform(definition)
