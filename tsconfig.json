@@ -43,8 +43,6 @@
 	],
 	"files": [
 		"index.ts",
-		"./OpenApi/Paths/Item/MediaType.ts",
-		"OpenApi/Schema.ts"
 	],
 	"typeAcquisition": {
 		"enable": true

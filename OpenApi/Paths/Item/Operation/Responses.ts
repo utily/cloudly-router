@@ -18,7 +18,7 @@ export namespace Responses {
 		export function from(response: Api.Endpoint.Response.Definition): Response {
 			return {
 				content: response.body ? { "application/json": MediaType.from(response.body) } : undefined,
-				description: "Successful operation",
+				description: response.status.description ?? "",
 				// headers: Object.entries(response.header).reduce((r, [name, type]) => ({ ...r, [name]: Header.from(type) }), {}),
 			}
 		}

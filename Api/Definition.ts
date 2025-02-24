@@ -4,7 +4,7 @@ export interface Definition {
 	name: string
 	description: string
 	endpoints: EndpointDefinition[]
-	version: `v${number}`
+	version: string
 	collections?: Definition.Collection[]
 }
 export namespace Definition {

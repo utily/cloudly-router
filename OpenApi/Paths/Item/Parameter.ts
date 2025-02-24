@@ -2,11 +2,7 @@ import { Api } from "../../../Api"
 import { Schema } from "../../Schema"
 import { MediaType } from "./MediaType"
 
-export type Parameter =
-	| Parameter.QueryParameter
-	| Parameter.HeaderParameter
-	| Parameter.PathParameter
-	| Parameter.CookieParameter
+export type Parameter = Parameter.QueryParameter | Parameter.HeaderParameter | Parameter.PathParameter
 export namespace Parameter {
 	export function from(request: Api.Endpoint.Request.Definition): Parameter[] {
 		return Object.entries(request.parameter).map(([key, value]) => ({
@@ -41,9 +37,7 @@ export namespace Parameter {
 		in: "path"
 		required: true
 	}
-	export interface CookieParameter extends CommonParameter {
-		in: "cookie"
-	}
+
 	export type Header = Omit<HeaderParameter, "in" | "name">
 	export interface Encoding {
 		allowReserved?: boolean

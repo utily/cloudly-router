@@ -68,7 +68,7 @@ api.add({
 	response: {
 		body: isly.number().array(),
 		header: { test: isly.string() },
-		status: isly.number("value", 201).rename("201"),
+		status: isly.number("value", 201),
 	},
 	execute: (request, context: Context) => {
 		return { body: request.body, header: { test: "success" }, status: 201 }

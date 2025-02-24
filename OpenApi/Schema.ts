@@ -49,7 +49,7 @@ export namespace Schema {
 		array: (type: isly.Array.Definition, transformer): Schema => ({
 			type: type.class,
 			description: type.description,
-			// nested: { values: transformer.transform(type.base) },
+			items: transformer.transform(type.base),
 		}),
 		// optional: (type: isly.Optional.Definition, transformer): Schema => transformer.transform(type.base),
 		// readonly: (type: isly.Readonly.Definition, transformer): Schema => transformer.transform(type.base),
