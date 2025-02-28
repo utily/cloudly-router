@@ -13,7 +13,6 @@ export interface Item {
 	patch?: Operation
 	post?: Operation
 	put?: Operation
-	// servers?: Server[]
 	summary?: string
 	trace?: Operation
 }

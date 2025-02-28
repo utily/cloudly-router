@@ -4,16 +4,12 @@ import { RequestBody } from "../RequestBody"
 import { Responses } from "./Responses"
 
 export interface Operation {
-	// callbacks?: undefined | { [callbackIdentifier: string]: Callback | Reference }
 	deprecated?: boolean
 	description?: string
-	// externalDocs?: undefined | ExternalDocumentation
 	operationId?: string
 	parameters?: Parameter[]
 	requestBody?: RequestBody
 	responses?: Responses
-	// security?: undefined | Array<SecurityRequirement>
-	// servers?: undefined | Array<Server>
 	summary?: string
 	tags?: string[]
 }

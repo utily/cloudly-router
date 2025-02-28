@@ -1,9 +1,7 @@
 import { Api } from "../Api"
 
 export interface Info {
-	// contact?: undefined | Contact
 	description?: string
-	// license?: License
 	summary?: string
 	termsOfService?: string
 	title: string

@@ -9,9 +9,7 @@ export interface Schema {
 	anyOf?: Schema[]
 	contains?: Schema
 	dependentSchemas?: { [key: string]: Schema }
-	// discriminator?: Discriminator
 	else?: Schema
-	// externalDocs?: ExternalDocumentation
 	if?: Schema
 	items?: Schema
 	not?: Schema

@@ -7,15 +7,12 @@ import { Tag } from "./Tag"
 
 export interface OpenApi {
 	components?: Components
-	// externalDocs?: undefined | ExternalDocumentation
 	info: Info
 	jsonSchemaDialect?: string
 	openapi: "3.0.2"
 	paths: Paths
-	// security?: undefined | SecurityRequirement[]
 	servers?: { description?: string; url: string }
 	tags?: Tag[]
-	// webhooks?: undefined | { [webhookName: string]: PathItem | Reference }
 }
 export namespace OpenApi {
 	export function endpoint(api: Api<any>, path: `/${string}`): Api.Endpoint<any, any, any, any, any, any, any> {

@@ -2,7 +2,6 @@ import { isly } from "isly"
 import * as router from "../index"
 
 describe("OpenApi", () => {
-	api.add(router.OpenApi.endpoint(api, "/help"))
 	it("from", () => {
 		expect(JSON.stringify(router.OpenApi.from(api))).toMatchInlineSnapshot(
 			`"{"info":{"description":"Api documentation for the pet store","title":"Pet Store","version":"v1"},"openapi":"3.0.2","paths":{"/pet":{"post":{"description":"Adds a new pet","summary":"Create Pet","parameters":[],"requestBody":{"content":{"application/json":{"schema":{"$ref":"#/components/schemas/Store.Pet"}}}},"responses":{"201":{"content":{"application/json":{"schema":{"$ref":"#/components/schemas/Store.Pet"}}},"description":"Successful operation"}},"tags":["Pet"]},"get":{"description":"Returns a list of pets","summary":"List Pets","parameters":[],"responses":{"200":{"content":{"application/json":{"schema":{"$ref":"#/components/schemas/Store.Pet"}}},"description":"Successful operation"}},"tags":["Pet"]}},"/pet/{id}":{"get":{"description":"Returns a single pet","summary":"Fetch a single Pet","parameters":[{"in":"path","description":"The pet's id","name":"id","schema":{"type":"string","description":"The pet's id"},"required":true}],"responses":{"200":{"content":{"application/json":{"schema":{"$ref":"#/components/schemas/Store.Pet"}}},"description":"Successful operation"}},"tags":["Pet"]}},"/food":{"get":{"description":"Returns a list of foods","summary":"List Food","parameters":[],"responses":{"200":{"content":{"application/json":{"schema":{"$ref":"#/components/schemas/Foods"}}},"description":"Successful operation"}},"tags":["Food"]}}},"components":{"schemas":{"Store.Pet":{"type":"object","description":"A pet.","properties":{"name":{"type":"string","description":"The pet's name."},"breed":{"type":"string","description":"The pet's breed."},"age":{"type":"number","description":"The pet's age."}}},"Foods":{"type":"array","description":"List of foods","items":{"type":"string"}}}},"tags":[{"description":"Endpoints to handle pets.","name":"Pet"}]}"`
@@ -37,6 +36,7 @@ const api = router.Api.create<object>(
 		collections: [{ name: "Pet", description: "Endpoints to handle pets." }],
 	}
 )
+api.add(router.OpenApi.endpoint(api, "/help"))
 api.add({
 	title: "Create Pet",
 	description: "Adds a new pet",
