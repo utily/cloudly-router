@@ -1,4 +1,6 @@
+import { isly } from "isly"
 import { Api } from "../../../../Api"
+import { Schema } from "../../../Schema"
 import { MediaType } from "../MediaType"
 import { Parameter } from "../Parameter"
 
@@ -12,14 +14,30 @@ export namespace Responses {
 	export interface Response {
 		content?: { [mediaType: string]: MediaType }
 		description: string
-		headers?: { [headerName: string]: Parameter.Header }
+		headers?: Response.Headers
 	}
 	export namespace Response {
 		export function from(response: Api.Endpoint.Response.Definition): Response {
 			return {
 				content: response.body ? { "application/json": MediaType.from(response.body) } : undefined,
 				description: response.status.description ?? "",
-				// headers: Object.entries(response.header).reduce((r, [name, type]) => ({ ...r, [name]: Header.from(type) }), {}),
+				headers: Headers.from(response.header),
+			}
+		}
+		export type Headers = Record<string, Omit<Parameter.Header, "in" | "name">>
+		export namespace Headers {
+			export function from(header: Record<string, isly.Definition>): Headers {
+				return Object.entries(header).reduce(
+					(r, [key, value]) => ({
+						...r,
+						[key]: {
+							description: value.description,
+							schema: Schema.from(value),
+							required: true,
+						},
+					}),
+					{}
+				)
 			}
 		}
 	}
