@@ -19,12 +19,12 @@
 	"exports": {
 		".": {
 			"import": {
-				"default": "./dist/mjs/index.js",
-				"types": "./dist/types/index.d.ts"
+				"types": "./dist/types/index.d.ts",
+				"default": "./dist/mjs/index.js"
 			},
 			"require": {
-				"default": "./dist/cjs/index.js",
-				"types": "./dist/types/index.d.ts"
+				"types": "./dist/types/index.d.ts",
+				"default": "./dist/cjs/index.js"
 			}
 		}
 	},
@@ -57,7 +57,7 @@
 		"vitest": "^3.0.7"
 	},
 	"dependencies": {
-		"cloudly-http": "utily/cloudly-http#update-config",
+		"cloudly-http": "^0.2.0-alpha.24",
 		"urlpattern-polyfill": "^10.0.0"
 	}
 }
