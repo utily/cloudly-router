@@ -46,8 +46,7 @@ const api = router.Api.create<object>(
 	{
 		name: "Pet Store",
 		description: "Api documentation for the pet store",
-		version: "v1",
-		collections: [{ name: "Pet", description: "Endpoints to handle pets." }],
+		tags: [{ name: "Pet", description: "Endpoints to handle pets." }],
 	}
 )
 api.add(router.OpenApi.endpoint(api, "/help"))

@@ -29,7 +29,7 @@ export class Api<C extends object = object> {
 	}
 	static create<C extends object = object>(
 		router: Router<C> | Partial<Router.Options>,
-		details: Omit<Api.Definition, "endpoints"> = { name: "unnamed", description: "", version: "v1" }
+		details: Omit<Api.Definition, "endpoints"> = { name: "unnamed", description: "" }
 	): Api<C> {
 		return new Api(router instanceof Router ? router : new Router<C>(router), details)
 	}

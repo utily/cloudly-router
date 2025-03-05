@@ -12,7 +12,7 @@ export namespace Info {
 		return {
 			description: api.description,
 			title: api.name,
-			version: api.version,
+			version: "v1",
 		}
 	}
 }

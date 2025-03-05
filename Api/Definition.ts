@@ -4,9 +4,8 @@ export interface Definition {
 	name: string
 	description: string
 	endpoints: EndpointDefinition[]
-	version: string
-	collections?: Definition.Collection[]
+	tags?: Definition.Tag[]
 }
 export namespace Definition {
-	export type Collection = { name: string; description: string }
+	export type Tag = { name: string; description: string }
 }

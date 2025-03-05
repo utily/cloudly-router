@@ -9,7 +9,7 @@ export interface OpenApi {
 	components?: Components
 	info: Info
 	jsonSchemaDialect?: string
-	openapi: "3.0.4"
+	openapi: string
 	paths: Paths
 	servers?: { description?: string; url: string }
 	tags?: Tag[]
@@ -39,7 +39,7 @@ export namespace OpenApi {
 			openapi: "3.0.4",
 			paths: Paths.from(endpoints),
 			components: Components.from(endpoints),
-			tags: Tag.from(api.definition.collections),
+			tags: Tag.from(api.definition.tags),
 		}
 	}
 }

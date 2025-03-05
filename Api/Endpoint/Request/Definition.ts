@@ -23,7 +23,7 @@ export namespace Definition {
 				request.header ?? {},
 				([name, type]) => [name, type.definition] as const
 			),
-			body: request.body && request.body.definition,
+			body: request.body?.definition,
 		}
 	}
 }

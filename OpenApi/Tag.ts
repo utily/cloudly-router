@@ -10,7 +10,7 @@ export namespace Tag {
 		description?: string
 		url: string
 	}
-	export function from(collections: Api.Definition.Collection[] | undefined): Tag[] | undefined {
+	export function from(collections: Api.Definition.Tag[] | undefined): Tag[] | undefined {
 		return collections?.map(collection => ({
 			description: collection.description,
 			name: collection.name,
