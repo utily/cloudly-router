@@ -3,7 +3,7 @@ import * as router from "../index"
 
 describe("OpenApi", () => {
 	it("from", () => {
-		expect(JSON.stringify(router.OpenApi.from(api))).toMatchInlineSnapshot(
+		expect(JSON.stringify(router.OpenApi.from(api, "v1"))).toMatchInlineSnapshot(
 			`"{"info":{"description":"Api documentation for the pet store","title":"Pet Store","version":"v1"},"openapi":"3.0.4","paths":{"/pet":{"post":{"description":"Adds a new pet","summary":"Create Pet","parameters":[{"in":"header","description":"An example request header.","name":"test","schema":{"type":"string","description":"An example request header."},"required":true}],"requestBody":{"content":{"application/json":{"schema":{"$ref":"#/components/schemas/Pet"}}}},"responses":{"201":{"content":{"application/json":{"schema":{"$ref":"#/components/schemas/Pet"}}},"description":"Pet created","headers":{"test":{"description":"An example response header.","schema":{"type":"string","description":"An example response header."},"required":true}}}},"tags":["Pet"]},"get":{"description":"Returns a list of pets","summary":"List Pets","parameters":[],"responses":{"200":{"content":{"application/json":{"schema":{"$ref":"#/components/schemas/Pet"}}},"description":"Pets listed","headers":{}}},"tags":["Pet"]}},"/pet/{id}":{"get":{"description":"Returns a single pet","summary":"Fetch a single Pet","parameters":[{"in":"path","description":"The pet's id","name":"id","schema":{"type":"string","description":"The pet's id"},"required":true}],"responses":{"200":{"content":{"application/json":{"schema":{"$ref":"#/components/schemas/Pet"}}},"description":"","headers":{}}},"tags":["Pet"]}},"/food":{"get":{"description":"Returns a list of foods","summary":"List Food","parameters":[],"responses":{"200":{"content":{"application/json":{"schema":{"$ref":"#/components/schemas/Foods"}}},"description":"Food listed","headers":{}}},"tags":["Food"]}}},"components":{"schemas":{"Pet":{"type":"object","description":"A pet.","properties":{"name":{"type":"string","description":"The pet's name."},"breed":{"type":"string","description":"The pet's breed."},"age":{"type":"number","description":"The pet's age."},"tuple":{"type":"array","description":"Description of test tuple.","oneOf":[{"type":"number","description":"Description of value1"},{"type":"string","description":"Description of value2"}],"minItems":2,"maxItems":2},"foods":{"type":"array","description":"The pet's favorite foods.","items":{"type":"object","description":"A food.","properties":{"name":{"type":"string","description":"The food's name."},"for":{"type":"array","description":"The animals the food is for.","items":{"type":"string","enum":["Dog","Cat"]}}},"required":["name","for"]}}},"required":["name","breed","age","tuple","foods"]},"Foods":{"type":"array","description":"List of foods","items":{"type":"object","description":"A food.","properties":{"name":{"type":"string","description":"The food's name."},"for":{"type":"array","description":"The animals the food is for.","items":{"type":"string","enum":["Dog","Cat"]}}},"required":["name","for"]}}}},"tags":[{"description":"Endpoints to handle pets.","name":"Pet"}]}"`
 		)
 	})
@@ -49,11 +49,11 @@ const api = router.Api.create<object>(
 		tags: [{ name: "Pet", description: "Endpoints to handle pets." }],
 	}
 )
-api.add(router.OpenApi.endpoint(api, "/help"))
+api.add(router.OpenApi.endpoint(api, "/help", "v1"))
 api.add({
 	title: "Create Pet",
 	description: "Adds a new pet",
-	collection: ["Pet"],
+	tags: ["Pet"],
 	path: "/pet",
 	method: "POST",
 	request: {
@@ -66,13 +66,13 @@ api.add({
 		status: isly.number("value", 201).describe("Pet created"),
 	},
 	execute: (request, context: object) => {
-		return { body: request.body, header: { test: "success" }, status: 201 }
+		return { status: 201, header: { test: "success" }, body: request.body }
 	},
 })
 api.add({
 	title: "List Pets",
 	description: "Returns a list of pets",
-	collection: ["Pet"],
+	tags: ["Pet"],
 	path: "/pet",
 	method: "GET",
 	request: {},
@@ -87,7 +87,7 @@ api.add({
 api.add({
 	title: "Fetch a single Pet",
 	description: "Returns a single pet",
-	collection: ["Pet"],
+	tags: ["Pet"],
 	path: "/pet/:id",
 	method: "GET",
 	request: { parameter: { id: isly.string().rename("id").describe("The pet's id") } },
@@ -102,7 +102,7 @@ api.add({
 api.add({
 	title: "List Food",
 	description: "Returns a list of foods",
-	collection: ["Food"],
+	tags: ["Food"],
 	path: "/food",
 	method: "GET",
 	request: {},

@@ -21,7 +21,7 @@ export namespace Operation {
 			parameters: Parameter.from(endpoint.request),
 			requestBody: RequestBody.from(endpoint.request),
 			responses: Responses.from(endpoint.response),
-			tags: endpoint.collection,
+			tags: endpoint.tags,
 		}
 	}
 }

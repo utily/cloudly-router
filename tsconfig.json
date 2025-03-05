@@ -43,8 +43,6 @@
 	],
 	"files": [
 		"index.ts",
-		"./OpenApi/Paths/Item/Parameter/Query.ts",
-		"./OpenApi/Paths/Item/Parameter/Path.ts",
 	],
 	"typeAcquisition": {
 		"enable": true

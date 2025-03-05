@@ -15,7 +15,11 @@ export interface OpenApi {
 	tags?: Tag[]
 }
 export namespace OpenApi {
-	export function endpoint(api: Api<any>, path: `/${string}`): Api.Endpoint<any, any, any, any, any, any, any> {
+	export function endpoint(
+		api: Api<any>,
+		path: `/${string}`,
+		version: string
+	): Api.Endpoint<any, any, any, any, any, any, any> {
 		return {
 			title: "OpenApi",
 			description: "",
@@ -27,14 +31,14 @@ export namespace OpenApi {
 				status: isly.number("value", 200),
 			},
 			execute: () => {
-				return { body: OpenApi.from(api), status: 200 }
+				return { body: OpenApi.from(api, version), status: 200 }
 			},
 		}
 	}
-	export function from(api: Api<any>): OpenApi {
+	export function from(api: Api<any>, version: string): OpenApi {
 		const endpoints = api.definition.endpoints.filter(endpoint => endpoint.title !== "OpenApi")
 		return {
-			info: Info.from(api.definition),
+			info: Info.from(api.definition, version),
 			// jsonSchemaDialect: "https://json-schema.org/draft/2020-12/schema",
 			openapi: "3.0.4",
 			paths: Paths.from(endpoints),

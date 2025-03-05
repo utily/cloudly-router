@@ -10,7 +10,7 @@ export interface Definition {
 	method: http.Method
 	request: Endpoint.Request.Definition
 	response: Endpoint.Response.Definition
-	collection?: string[]
+	tags?: string[]
 }
 export namespace Definition {
 	export function from<C extends object>(endpoint: Endpoint<C>): Definition {
@@ -21,7 +21,7 @@ export namespace Definition {
 			method: endpoint.method,
 			request: Request.Definition.from(endpoint.request),
 			response: Response.Definition.from(endpoint.response),
-			collection: endpoint.collection,
+			tags: endpoint.tags,
 		}
 	}
 }

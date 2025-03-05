@@ -8,11 +8,11 @@ export interface Info {
 	version: string
 }
 export namespace Info {
-	export function from(api: Api.Definition): Info {
+	export function from(api: Api.Definition, version: string): Info {
 		return {
 			description: api.description,
 			title: api.name,
-			version: "v1",
+			version,
 		}
 	}
 }

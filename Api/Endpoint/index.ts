@@ -16,7 +16,7 @@ export interface Endpoint<
 	// TODO:
 	// * support response type (and verification?)
 	title: string
-	collection?: string[]
+	tags?: string[]
 	description: string
 	path: string
 	method: http.Method
