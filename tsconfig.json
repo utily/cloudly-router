@@ -39,10 +39,10 @@
 		]
 	},
 	"include": [
-		"**/*.spec.ts",
+		"**/*.spec.ts"
 	],
 	"files": [
-		"index.ts",
+		"index.ts"
 	],
 	"typeAcquisition": {
 		"enable": true
