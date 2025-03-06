@@ -27,11 +27,11 @@ export namespace OpenApi {
 			method: "GET",
 			request: {},
 			response: {
-				body: isly.any(),
 				status: isly.number("value", 200),
+				body: isly.any(),
 			},
 			execute: () => {
-				return { body: OpenApi.from(api, version), status: 200 }
+				return { status: 200, body: OpenApi.from(api, version) }
 			},
 		}
 	}

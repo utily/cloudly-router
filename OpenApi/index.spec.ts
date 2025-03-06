@@ -57,13 +57,13 @@ api.add({
 	path: "/pet",
 	method: "POST",
 	request: {
-		body: pet,
 		header: { test: isly.string().rename("test").describe("An example request header.") },
+		body: pet,
 	},
 	response: {
-		body: pet,
-		header: { test: isly.string().rename("test").describe("An example response header.") },
 		status: isly.number("value", 201).describe("Pet created"),
+		header: { test: isly.string().rename("test").describe("An example response header.") },
+		body: pet,
 	},
 	execute: (request, context: object) => {
 		return { status: 201, header: { test: "success" }, body: request.body }
@@ -77,11 +77,11 @@ api.add({
 	method: "GET",
 	request: {},
 	response: {
-		body: pet,
 		status: isly.number("value", 200).describe("Pets listed"),
+		body: pet,
 	},
 	execute: (request, context) => {
-		return { body: { name: "Egon Husk", breed: "Dog", age: 2 }, status: 200 }
+		return { status: 200, body: { name: "Egon Husk", breed: "Dog", age: 2 } }
 	},
 })
 api.add({
@@ -92,11 +92,11 @@ api.add({
 	method: "GET",
 	request: { parameter: { id: isly.string().rename("id").describe("The pet's id") } },
 	response: {
-		body: pet,
 		status: isly.number("value", 200),
+		body: pet,
 	},
 	execute: (request, context) => {
-		return { body: { name: "Egon Husk", breed: "Dog", age: 2 }, status: 200 }
+		return { status: 200, body: { name: "Egon Husk", breed: "Dog", age: 2 } }
 	},
 })
 api.add({
@@ -107,16 +107,16 @@ api.add({
 	method: "GET",
 	request: {},
 	response: {
-		body: food.array().rename("Foods").describe("List of foods"),
 		status: isly.number("value", 200).describe("Food listed"),
+		body: food.array().rename("Foods").describe("List of foods"),
 	},
 	execute: (request, context) => {
 		return {
+			status: 200,
 			body: [
 				{ name: "Formula 1", for: "Dog" },
 				{ name: "Flight Fuel", for: ["Pigeon", "Parrot"] },
 			],
-			status: 200,
 		}
 	},
 })
