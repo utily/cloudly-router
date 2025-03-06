@@ -3,7 +3,7 @@ name: "Bump"
 on:
   push:
     branches:
-      - "master-0"
+      - "master-0.1"
 jobs:
   bump-version:
     name: "Bump Version"
@@ -26,7 +26,7 @@ jobs:
         id: version-bump
         uses: "phips28/gh-action-bump-version@master"
         with:
-          version-type: "minor"
+          version-type: "patch"
           tag-prefix: "release-"
         env:
           GITHUB_TOKEN: ${{ secrets.ADMIN_TOKEN }}
