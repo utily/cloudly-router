@@ -6,25 +6,28 @@ on:
       - "release-*"
 jobs:
   publish:
-    name: "Publish from master"
+    name: "Publish"
     timeout-minutes: 60
     runs-on: ubuntu-latest
     steps:
       - name: "Checkout source code"
-        uses: "actions/checkout@v2"
+        uses: "actions/checkout@v3"
       - name: "Setup Node"
-        uses: "actions/setup-node@v2"
+        uses: "actions/setup-node@v3"
         with:
-          node-version: 16
-      - name: Update NPM
-        run: npm install -g npm
+          node-version: current
+          cache: 'npm'
+      - uses: actions/cache@v3
+        with:
+          path: '**/node_modules'
+          key: node_modules-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
       - name: Install
         run: npm install
       - name: Build
         run: npm run build
       - name: Publish
         run: |
-          echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > .npmrc  
+          echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > .npmrc
           npm publish --access public
         shell: bash
         env:
