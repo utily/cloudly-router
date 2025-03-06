@@ -50,8 +50,11 @@
 		"isly",
 		"isoly",
 		"langly",
+		"Mika",
 		"paramly",
 		"persistly",
+		"prettierx",
+		"Renamer",
 		"selectivly",
 		"servly",
 		"servly-azure",
@@ -60,7 +63,8 @@
 		"transactly",
 		"typedly",
 		"uply",
-		"Renamer",
+		"urlpattern",
+		"utily"
 	],
 	"typescript.tsdk": "node_modules/typescript/lib"
 }

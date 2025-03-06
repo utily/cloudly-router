@@ -39,7 +39,7 @@
 		]
 	},
 	"include": [
-		"**/*.spec.ts",
+		"**/*.spec.ts"
 	],
 	"files": [
 		"index.ts"

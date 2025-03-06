@@ -19,12 +19,12 @@
 	"exports": {
 		".": {
 			"import": {
-				"default": "./dist/mjs/index.js",
-				"types": "./dist/types/index.d.ts"
+				"types": "./dist/types/index.d.ts",
+				"default": "./dist/mjs/index.js"
 			},
 			"require": {
-				"default": "./dist/cjs/index.js",
-				"types": "./dist/types/index.d.ts"
+				"types": "./dist/types/index.d.ts",
+				"default": "./dist/cjs/index.js"
 			}
 		}
 	},
@@ -47,17 +47,20 @@
 	"devDependencies": {
 		"@typescript-eslint/eslint-plugin": "8.18.1",
 		"@typescript-eslint/parser": "8.18.1",
-		"@vitest/coverage-v8": "^2.1.8",
+		"@vitest/coverage-v8": "^3.0.7",
 		"eslint": "^8.57.0",
 		"eslint-plugin-prettierx": "github:utily/eslint-plugin-prettierx#utily-20231004",
 		"eslint-plugin-simple-import-sort": "^12.1.1",
 		"prettierx": "github:utily/prettierx#utily-20231004",
 		"rimraf": "^6.0.1",
 		"typescript": "^5.7.2",
-		"vitest": "^2.1.8"
+		"vitest": "^3.0.7"
 	},
 	"dependencies": {
-		"cloudly-http": "utily/cloudly-http#update-config",
+		"cloudly-http": "^0.2.0-alpha.21",
+		"gracely": "^2.0.9",
+		"isly": "^1.0.1-alpha.18",
+		"typedly": "^0.0.26",
 		"urlpattern-polyfill": "^10.0.0"
 	}
 }
