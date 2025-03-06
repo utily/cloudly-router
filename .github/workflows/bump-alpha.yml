@@ -1,10 +1,9 @@
-name: "Bump"
+name: "Bump Alpha"
 
 on:
   push:
     branches:
-      - "master-0.1"
-      - "master-0.2"
+      - "master"
 jobs:
   bump-version:
     name: "Bump Version"
@@ -27,7 +26,10 @@ jobs:
         id: version-bump
         uses: "phips28/gh-action-bump-version@master"
         with:
-          version-type: "minor"
+          default: prerelease
+          version-type: "prerelease"
+          preid: alpha
+          rc-wording: ""
           tag-prefix: "release-"
         env:
           GITHUB_TOKEN: ${{ secrets.ADMIN_TOKEN }}
