@@ -1,4 +1,3 @@
-import { http } from "cloudly-http"
 import { isly } from "isly"
 import * as router from "../index"
 
@@ -56,7 +55,7 @@ type Context = {
 	id: string
 }
 const context: Context = { id: "test" }
-const api = router.Api.create<Context>({})
+const api = router.Api.create<Context>({}, { name: "Test server", description: "This is a test api." })
 api.add({
 	title: "Create Resource",
 	description: "",
@@ -68,8 +67,9 @@ api.add({
 	response: {
 		body: isly.number().array(),
 		header: { test: isly.string() },
+		status: isly.number("value", 201),
 	},
 	execute: (request, context: Context) => {
-		return { body: request.body, header: { test: "success" } }
+		return { body: request.body, header: { test: "success" }, status: 201 }
 	},
 })

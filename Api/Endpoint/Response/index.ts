@@ -6,7 +6,8 @@ export interface Response<
 	H extends Record<keyof http.Response.Header, any> | undefined, //Headers
 	B //Body
 > {
-	header: H
+	status: number
+	header?: H
 	body: B
 }
 export namespace Response {
