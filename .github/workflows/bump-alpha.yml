@@ -1,9 +1,9 @@
-name: "Bump 0.2"
+name: "Bump Alpha"
 
 on:
   push:
     branches:
-      - "master-0.2"
+      - "master"
 jobs:
   bump-version:
     name: "Bump Version"
@@ -13,8 +13,9 @@ jobs:
 
     steps:
       - name: "Checkout source code"
-        uses: "actions/checkout@v3"
+        uses: "actions/checkout@v4"
         with:
+          ref: ${{ github.ref }}
           token: ${{ secrets.ADMIN_TOKEN }}
       - name: "Setup Node"
         uses: "actions/setup-node@v3"
@@ -26,6 +27,7 @@ jobs:
         uses: "phips28/gh-action-bump-version@master"
         with:
           default: prerelease
+          version-type: "prerelease"
           preid: alpha
           rc-wording: ""
           tag-prefix: "release-"
