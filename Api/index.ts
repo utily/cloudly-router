@@ -3,7 +3,7 @@ import { http } from "cloudly-http"
 import { Router } from "../Router"
 import { Definition as _Definition } from "./Definition"
 import { Endpoint as _Endpoint } from "./Endpoint"
-import { Identity } from "./Identity"
+import { Identity as _Identity } from "./Identity"
 
 export class Api<C extends object = object> {
 	private readonly endpoints: Api.Endpoint<C>[] = []
@@ -15,7 +15,7 @@ export class Api<C extends object = object> {
 		S extends Record<string, any>,
 		P extends Record<string, any>,
 		H extends Record<keyof http.Request.Header, any>,
-		I extends Identity,
+		I extends Api.Identity,
 		B,
 		RH extends Record<keyof http.Request.Header, any>,
 		RB
@@ -39,4 +39,5 @@ export class Api<C extends object = object> {
 export namespace Api {
 	export import Definition = _Definition
 	export import Endpoint = _Endpoint
+	export import Identity = _Identity
 }
