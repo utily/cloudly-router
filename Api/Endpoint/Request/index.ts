@@ -1,18 +1,21 @@
 import { gracely } from "gracely"
+import { Identity } from "Api/Identity"
 import { http } from "cloudly-http"
 import { isly } from "isly"
 import { Configuration as _Configuration } from "./Configuration"
 import { Definition as _Definition } from "./Definition"
 
 export interface Request<
-	S extends Record<string, any>, //Search parameters
-	P extends Record<string, any>, //Path arguments
-	H extends Record<keyof http.Request.Header, any>, //Headers
-	B //Body
+	S extends Record<string, any>, // Search parameters
+	P extends Record<string, any>, // Path arguments
+	H extends Record<keyof http.Request.Header, any>, // Headers
+	I extends Identity | undefined, // Identity
+	B // Body
 > {
 	search: S
 	parameter: P
 	header: H
+	identity: I
 	body: B
 }
 export namespace Request {
@@ -22,13 +25,16 @@ export namespace Request {
 		S extends Record<string, any>, // Search Parameter names & types
 		P extends Record<string, any>, // Path parameter names & types
 		H extends Record<keyof http.Request.Header, any>, // Header types
+		I extends Identity | undefined, // Identity type
 		B // Body type
-	>(configuration: Configuration<S, P, H, B>, request: http.Request): Promise<gracely.Error | Request<S, P, H, B>> {
+	>(
+		configuration: Configuration<S, P, H, I, B>,
+		request: http.Request
+	): Promise<gracely.Error | Request<S, P, H, I, B>> {
 		// TODO:
 		// * support parsing of arguments
 		// * return multiple gracely.Errors
 		// * return flaws for all errors
-		// * support authentication
 		const result: gracely.Error[] = []
 		result.push(
 			...Object.entries(configuration.parameter ?? {})
@@ -51,8 +57,12 @@ export namespace Request {
 		const flaw = (configuration.body ?? isly.undefined()).flawed(request.body)
 		if (flaw)
 			result.push(gracely.client.flawedContent(flaw as unknown as gracely.Flaw))
+		const identity = configuration.identity && Identity.verify(configuration.identity, request.header)
+		if (isly.Flaw.type.array().is(identity))
+			result.push(gracely.client.unauthorized("invalid identity"))
 		return result[0]
 			? result[0]
-			: Configuration.toType<S, P, H, B>(configuration).prune(request) ?? gracely.client.forbidden("invalid request")
+			: Configuration.toType<S, P, H, I, B>(configuration).prune({ ...request, identity }) ??
+					gracely.client.forbidden("invalid request")
 	}
 }

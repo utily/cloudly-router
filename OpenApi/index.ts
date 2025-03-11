@@ -19,19 +19,17 @@ export namespace OpenApi {
 		api: Api<any>,
 		path: `/${string}`,
 		version: string
-	): Api.Endpoint<any, any, any, any, any, any, any> {
+	): Api.Endpoint<any, any, any, any, any, any, any, any> {
 		return {
 			title: "OpenApi",
 			description: "",
 			path,
 			method: "GET",
 			request: {},
+			execute: () => ({ status: 200, body: OpenApi.from(api, version) }),
 			response: {
 				status: isly.number("value", 200),
 				body: isly.any(),
-			},
-			execute: () => {
-				return { status: 200, body: OpenApi.from(api, version) }
 			},
 		}
 	}
