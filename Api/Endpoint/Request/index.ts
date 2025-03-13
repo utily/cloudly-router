@@ -26,10 +26,12 @@ export namespace Request {
 		P extends Record<string, any>, // Path parameter names & types
 		H extends Record<keyof http.Request.Header, any>, // Header types
 		I extends Identity | undefined, // Identity type
-		B // Body type
+		B, // Body type
+		Context = unknown
 	>(
 		configuration: Configuration<S, P, H, I, B>,
-		request: http.Request
+		request: http.Request,
+		context: Context
 	): Promise<gracely.Error | Request<S, P, H, I, B>> {
 		// TODO:
 		// * support parsing of arguments
@@ -57,7 +59,7 @@ export namespace Request {
 		const flaw = (configuration.body ?? isly.undefined()).flawed(request.body)
 		if (flaw)
 			result.push(gracely.client.flawedContent(flaw as unknown as gracely.Flaw))
-		const identity = configuration.identity && Identity.verify(configuration.identity, request.header)
+		const identity = configuration.identity && Identity.verify(configuration.identity, request.header, context)
 		if (isly.Flaw.type.array().is(identity))
 			result.push(gracely.client.unauthorized("invalid identity"))
 		return result[0]

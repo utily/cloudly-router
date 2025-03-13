@@ -22,7 +22,7 @@ export class Api<C extends object = object> {
 	>(endpoint: Api.Endpoint<C, S, P, H, I, B, RH, RB>): void {
 		this.endpoints.push(endpoint as any as Api.Endpoint<C>)
 		this.router.add(endpoint.method, endpoint.path, async (request: http.Request, context: C): Promise<any> => {
-			const verified = await Api.Endpoint.Request.verify(endpoint.request, request)
+			const verified = await Api.Endpoint.Request.verify(endpoint.request, request, context)
 			return gracely.Error.is(verified) ? verified : await endpoint.execute(verified, context)
 		})
 	}
