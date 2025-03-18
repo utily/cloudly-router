@@ -9,7 +9,7 @@ export class Route<T> {
 		private readonly handler: Handler<T>,
 		readonly middleware: http.Middleware
 	) {}
-	async handle(request: http.Request, context: T): Promise<http.Response | any> {
+	async handle(request: http.Request, context: T): Promise<http.Response> {
 		return this.middleware(request, async request => http.Response.create(await this.handler(request, context)))
 	}
 	match(request: http.Request, ...alternatePrefix: string[]): http.Request | undefined {
