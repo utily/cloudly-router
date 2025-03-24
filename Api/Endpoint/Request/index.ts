@@ -1,7 +1,7 @@
 import { gracely } from "gracely"
-import { Identity } from "Api/Identity"
 import { http } from "cloudly-http"
 import { isly } from "isly"
+import { Identity } from "../../Identity"
 import { Configuration as _Configuration } from "./Configuration"
 import { Definition as _Definition } from "./Definition"
 
