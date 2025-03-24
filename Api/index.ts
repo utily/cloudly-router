@@ -3,6 +3,7 @@ import { http } from "cloudly-http"
 import { Router } from "../Router"
 import { Definition as _Definition } from "./Definition"
 import { Endpoint as _Endpoint } from "./Endpoint"
+import { Identity as _Identity } from "./Identity"
 
 export class Api<C extends object = object> {
 	private readonly endpoints: Api.Endpoint<C>[] = []
@@ -14,13 +15,14 @@ export class Api<C extends object = object> {
 		S extends Record<string, any>,
 		P extends Record<string, any>,
 		H extends Record<keyof http.Request.Header, any>,
+		I extends Api.Identity,
 		B,
 		RH extends Record<keyof http.Request.Header, any>,
 		RB
-	>(endpoint: Api.Endpoint<C, S, P, H, B, RH, RB>): void {
+	>(endpoint: Api.Endpoint<C, S, P, H, I, B, RH, RB>): void {
 		this.endpoints.push(endpoint as any as Api.Endpoint<C>)
 		this.router.add(endpoint.method, endpoint.path, async (request: http.Request, context: C): Promise<any> => {
-			const verified = await Api.Endpoint.Request.verify(endpoint.request, request)
+			const verified = await Api.Endpoint.Request.verify(endpoint.request, request, context)
 			return gracely.Error.is(verified) ? verified : await endpoint.execute(verified, context)
 		})
 	}
@@ -37,4 +39,5 @@ export class Api<C extends object = object> {
 export namespace Api {
 	export import Definition = _Definition
 	export import Endpoint = _Endpoint
+	export import Identity = _Identity
 }

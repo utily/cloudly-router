@@ -1,5 +1,6 @@
 import { gracely } from "gracely"
 import { http } from "cloudly-http"
+import { Identity } from "../Identity"
 import { Definition as _Definition } from "./Definition"
 import { Request as _Request } from "./Request"
 import { Response as _Response } from "./Response"
@@ -9,6 +10,7 @@ export interface Endpoint<
 	S extends Record<string, any> = Record<string, never>, //Search parameters
 	P extends Record<string, any> = Record<string, never>, //Path arguments
 	H extends Record<keyof http.Request.Header, any> = Record<keyof http.Request.Header, never>, //Headers
+	I extends Identity = Identity, //Identity
 	B = never, //Body
 	RH extends Record<keyof http.Response.Header, any> = Record<keyof http.Response.Header, never>, //Response Headers
 	RB = never //Response Body
@@ -20,12 +22,12 @@ export interface Endpoint<
 	description: string
 	path: string
 	method: http.Method
-	request: Endpoint.Request.Configuration<S, P, H, B>
-	response: Endpoint.Response.Configuration<RH, RB>
+	request: Endpoint.Request.Configuration<S, P, H, I, B>
 	execute: (
-		request: Endpoint.Request<S, P, H, B>,
+		request: Endpoint.Request<S, P, H, I, B>,
 		context: C
 	) => Promise<Endpoint.Response<RH, RB> | gracely.Error> | Endpoint.Response<RH, RB> | gracely.Error
+	response: Endpoint.Response.Configuration<RH, RB>
 }
 export namespace Endpoint {
 	export import Request = _Request
