@@ -24,6 +24,6 @@ export namespace Identity {
 			: (configuration
 					? [configuration.header.type.flawed(header[configuration.header.name])]
 					: configurations.map(configuration => configuration.header.type.flawed(header[configuration.header.name]))
-			  ).filter(isly.boolean(false).inverse().is)
+			  ).filter(isly.boolean(false).inverse().bind().is)
 	}
 }
