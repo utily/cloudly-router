@@ -59,7 +59,7 @@ export namespace Request {
 		const flaw = (configuration.body ?? isly.undefined()).flawed(request.body)
 		if (flaw)
 			result.push(gracely.client.flawedContent(flaw as unknown as gracely.Flaw))
-		const identity = configuration.identity && Identity.verify(configuration.identity, request.header, context)
+		const identity = configuration.identity && (await Identity.verify(configuration.identity, request.header, context))
 		if (isly.Flaw.type.array().is(identity))
 			result.push(gracely.client.unauthorized("invalid identity"))
 		return result[0]
