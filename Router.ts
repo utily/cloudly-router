@@ -81,7 +81,7 @@ export class Router<T extends object> {
 				)
 			else if (request.method == "OPTIONS")
 				result = http.Response.create({
-					status: 204,
+					status: matches.length == 0 ? 404 : 204,
 					header: {
 						accessControlAllowMethods: matches.flatMap(match => match.route.methods),
 						accessControlAllowHeaders: this.options.allowHeaders.map(http.Request.Header.Name.to),
