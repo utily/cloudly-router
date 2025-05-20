@@ -25,7 +25,7 @@ export class Router<T extends object> {
 	) {
 		this.routes.push(Route.create(method, pattern, handler, middleware ?? this.options.middleware))
 	}
-	private async catch(process: () => Promise<http.Response>, allowOrigin: string | undefined): Promise<http.Response> {
+	private async catch(process: () => Promise<http.Response>): Promise<http.Response> {
 		let result: http.Response
 		if (this.options.catch)
 			try {
@@ -37,7 +37,6 @@ export class Router<T extends object> {
 						: http.Response.create(
 								{
 									status: 500,
-									header: { accessControlAllowOrigin: allowOrigin },
 									type: "unknown error",
 									error: "exception",
 									description: (typeof error == "object" && error && error.toString()) || undefined,
@@ -66,47 +65,46 @@ export class Router<T extends object> {
 		fallback?: Router.Fallback<T>
 	): Promise<http.Response | Response> {
 		let result: http.Response | Response
-		if (http.Request.is(request)) {
-			const matches = this.routes.reduce<[http.Request, Route<T>][]>((result, route) => {
-				const r = route.match(request, ...this.options.alternatePrefix)
-				return r ? [...result, [r, route]] : result
-			}, [])
-			const match = matches.find(([request, route]) => route.methods.some(m => m == request.method))
-			const allowOrigin = this.getOrigin(request)
-			result = match
-				? await this.catch(
-						() => match[1].handle(match[0], typeof context == "function" ? context(match[0]) : context),
-						allowOrigin
-				  )
-				: matches.length == 0
-				? (await fallback?.notFound(request, typeof context == "function" ? context(request) : context)) ??
-				  http.Response.create({ status: 404 })
-				: request.method == "OPTIONS"
-				? http.Response.create({
-						status: 204,
-						header: {
-							accessControlAllowMethods: matches.flatMap(([_, r]) => r.methods),
-							accessControlAllowHeaders: this.options.allowHeaders.map(http.Request.Header.Name.to),
-						},
-				  })
-				: http.Response.create({ status: 405, header: { allow: matches.flatMap(([_, r]) => r.methods) } })
-			result = {
-				...result,
-				header: {
-					...result.header,
-					accessControlAllowOrigin: allowOrigin,
-				},
-			}
-		} else if (request instanceof Request)
+		if (request instanceof Request)
 			result = await http.Response.to(
 				await this.handle(await http.Request.from(request, "none"), context, fallback),
 				"none"
 			)
-		else
+		else if (!http.Request.is(request))
 			result = await this.handle(http.Request.create(request), context, fallback)
+		else {
+			const matches = this.match(request)
+			const match = matches.find(match => match.route.methods.some(m => m == request.method))
+			if (match)
+				result = await this.catch(() =>
+					match.route.handle(match.request, typeof context == "function" ? context(match.request) : context)
+				)
+			else if (request.method == "OPTIONS")
+				result = http.Response.create({
+					status: 204,
+					header: {
+						accessControlAllowMethods: matches.flatMap(match => match.route.methods),
+						accessControlAllowHeaders: this.options.allowHeaders.map(http.Request.Header.Name.to),
+					},
+				})
+			else if (matches.length == 0)
+				result =
+					(await fallback?.notFound(request, typeof context == "function" ? context(request) : context)) ??
+					http.Response.create({ status: 404 })
+			else
+				result = http.Response.create({ status: 405, header: { allow: matches.flatMap(match => match.route.methods) } })
+			result = { ...result, header: { ...result.header, accessControlAllowOrigin: this.getOrigin(request) } }
+		}
 		return result
 	}
-
+	private match(request: http.Request): { request: http.Request; route: Route<T> }[] {
+		return this.routes.reduce<{ request: http.Request; route: Route<T> }[]>((result, route) => {
+			const match = route.match(request, ...this.options.alternatePrefix)
+			if (match)
+				result.push({ request: match, route })
+			return result
+		}, [])
+	}
 	private getOrigin(request: http.Request): string | undefined {
 		return this.options.origin.some(
 			origin =>
@@ -118,16 +116,9 @@ export class Router<T extends object> {
 			: undefined
 	}
 }
-
 export namespace Router {
-	export type Fallback<T = unknown> = {
-		notFound: (request: http.Request, context: T) => Promise<http.Response>
-	}
-	export type Schedule<T> = RouterSchedule<T>
-	export namespace Schedule {
-		export const Event = RouterSchedule.Event
-		export type Event = RouterSchedule.Event
-	}
+	export type Fallback<T = unknown> = { notFound: (request: http.Request, context: T) => Promise<http.Response> }
+	export import Schedule = RouterSchedule
 	export interface Options {
 		readonly alternatePrefix: string[]
 		readonly origin: (string | RegExp)[]
