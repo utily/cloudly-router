@@ -79,10 +79,6 @@ export class Router<T extends object> {
 				result = await this.catch(() =>
 					match.route.handle(match.request, typeof context == "function" ? context(match.request) : context)
 				)
-			else if (matches.length == 0)
-				result =
-					(await fallback?.notFound(request, typeof context == "function" ? context(request) : context)) ??
-					http.Response.create({ status: 404 })
 			else if (request.method == "OPTIONS")
 				result = http.Response.create({
 					status: 204,
@@ -91,6 +87,10 @@ export class Router<T extends object> {
 						accessControlAllowHeaders: this.options.allowHeaders.map(http.Request.Header.Name.to),
 					},
 				})
+			else if (matches.length == 0)
+				result =
+					(await fallback?.notFound(request, typeof context == "function" ? context(request) : context)) ??
+					http.Response.create({ status: 404 })
 			else
 				result = http.Response.create({ status: 405, header: { allow: matches.flatMap(match => match.route.methods) } })
 			result = { ...result, header: { ...result.header, accessControlAllowOrigin: this.getOrigin(request) } }
