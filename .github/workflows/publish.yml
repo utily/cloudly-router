@@ -4,6 +4,9 @@ on:
   push:
     tags:
       - "release-*"
+permissions:
+  contents: read
+  id-token: write   # Required for OIDC
 jobs:
   publish:
     name: "Publish"
@@ -11,18 +14,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: "Checkout source code"
-        uses: "actions/checkout@v3"
-      - name: "Setup Node"
-        uses: "actions/setup-node@v3"
+        uses: actions/checkout@v5
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
         with:
-          node-version: current
-          cache: "npm"
-      - uses: actions/cache@v3
-        with:
-          path: "**/node_modules"
-          key: node_modules-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+          node-version: 24
       - name: Install
-        run: npm install
+        run: npm ci
       - name: Build
         run: npm run build
       - name: Publish
@@ -30,10 +28,8 @@ jobs:
           echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > .npmrc
           VERSION=$(node -p "require('./package.json').version")
           if [[ "$VERSION" == *-* ]]; then
-            npm publish --access public --tag prerelease
+            npm publish --provenance --access public --tag prerelease
           else
-            npm publish --access public
+            npm publish --provenance --access public
           fi
         shell: bash
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
