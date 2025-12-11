@@ -120,7 +120,7 @@ describe("Router", () => {
 				),
 		}
 		expect(
-			await router.handle(http.Request.create({ method: "OPTIONS", url: "https://example.com/notFound" }), {}, notFound)
+			await router.handle(http.Request.create({ method: "GET", url: "https://example.com/notFound" }), {}, notFound)
 		).toEqual({
 			body: {
 				description: 'Please use url "https://example.com/test" and method "POST"',
