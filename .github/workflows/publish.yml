@@ -25,11 +25,10 @@ jobs:
         run: npm run build
       - name: Publish
         run: |
-          echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > .npmrc
           VERSION=$(node -p "require('./package.json').version")
           if [[ "$VERSION" == *-* ]]; then
-            npm publish --provenance --access public --tag prerelease
+            npm publish --access public --tag prerelease
           else
-            npm publish --provenance --access public
+            npm publish --access public
           fi
         shell: bash
