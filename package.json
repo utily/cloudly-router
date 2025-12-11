@@ -6,12 +6,12 @@
 	"license": "MIT",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/utily/cloudly-http"
+		"url": "https://github.com/utily/cloudly-router"
 	},
 	"bugs": {
-		"url": "https://github.com/utily/cloudly-http/issues"
+		"url": "https://github.com/utily/cloudly-router/issues"
 	},
-	"homepage": "https://github.com/utily/cloudly-http",
+	"homepage": "https://github.com/utily/cloudly-router",
 	"private": false,
 	"type": "module",
 	"module": "./dist/mjs/index.js",
