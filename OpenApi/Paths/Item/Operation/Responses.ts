@@ -21,7 +21,7 @@ export namespace Responses {
 			return {
 				content: response.body ? { "application/json": MediaType.from(response.body) } : undefined,
 				description: response.status.description ?? "",
-				headers: Headers.from(response.header),
+				headers: Headers.from(response.header)
 			}
 		}
 		export type Headers = Record<string, Omit<Parameter.Header, "in" | "name">>
@@ -30,11 +30,7 @@ export namespace Responses {
 				return Object.entries(header).reduce(
 					(r, [key, value]) => ({
 						...r,
-						[key]: {
-							description: value.description,
-							schema: Schema.from(value),
-							required: true,
-						},
+						[key]: { description: value.description, schema: Schema.from(value), required: true }
 					}),
 					{}
 				)

@@ -10,20 +10,10 @@ api.add({
 	tags: ["item"],
 	method: "GET",
 	path: "/item",
-	request: {
-		identity: Context.Identity.getConfigurations(["bearer"], { item: { read: true } }),
-	},
+	request: { identity: Context.Identity.getConfigurations(["bearer"], { item: { read: true } }) },
 	async execute(request, context: Context) {
 		const result = context.items.list()
-		return result
-			? {
-					status: 200,
-					body: result,
-			  }
-			: gracely.server.databaseFailure()
+		return result ? { status: 200, body: result } : gracely.server.databaseFailure()
 	},
-	response: {
-		status: isly.number("value", 200),
-		body: model.Item.type,
-	},
+	response: { status: isly.number("value", 200), body: model.Item.type }
 })

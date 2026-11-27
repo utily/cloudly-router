@@ -10,10 +10,7 @@ export class Context {
 			this.environment.items
 				.split(",")
 				.map(id => id.trim())
-				.map((id, number) => ({
-					id,
-					number,
-				}))
+				.map((id, number) => ({ id, number }))
 		))
 	}
 	private constructor(private readonly environment: Context.Environment | any) {}

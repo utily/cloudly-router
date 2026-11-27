@@ -16,8 +16,7 @@ export class Items {
 	}
 	remove(identifier: model.Identifier): boolean {
 		const result = !!this.backend[identifier]
-		if (result)
-			delete this.backend[identifier]
+		if (result) delete this.backend[identifier]
 		return result
 	}
 	static create(items: model.Item[] = []): Items {

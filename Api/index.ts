@@ -10,7 +10,10 @@ export class Api<C extends object = object> {
 	get definition(): Api.Definition {
 		return { ...this.details, endpoints: this.endpoints.map(Api.Endpoint.Definition.from) }
 	}
-	private constructor(readonly router: Router<C>, private readonly details: Omit<Api.Definition, "endpoints">) {}
+	private constructor(
+		readonly router: Router<C>,
+		private readonly details: Omit<Api.Definition, "endpoints">
+	) {}
 	add<
 		S extends Record<string, any>,
 		P extends Record<string, any>,

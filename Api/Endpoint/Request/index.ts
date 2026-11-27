@@ -57,14 +57,12 @@ export namespace Request {
 				.filter((error: false | gracely.Error): error is gracely.Error => !!error)
 		)
 		const flaw = (configuration.body ?? isly.undefined()).flawed(request.body)
-		if (flaw)
-			result.push(gracely.client.flawedContent(flaw as unknown as gracely.Flaw))
+		if (flaw) result.push(gracely.client.flawedContent(flaw as unknown as gracely.Flaw))
 		const identity = configuration.identity && (await Identity.verify(configuration.identity, request.header, context))
-		if (isly.Flaw.type.array().is(identity))
-			result.push(gracely.client.unauthorized("invalid identity"))
+		if (isly.Flaw.type.array().is(identity)) result.push(gracely.client.unauthorized("invalid identity"))
 		return result[0]
 			? result[0]
-			: Configuration.toType<S, P, H, I, B>(configuration).prune({ ...request, identity }) ??
-					gracely.client.forbidden("invalid request")
+			: (Configuration.toType<S, P, H, I, B>(configuration).prune({ ...request, identity })
+					?? gracely.client.forbidden("invalid request"))
 	}
 }

@@ -37,7 +37,7 @@ export namespace Configuration {
 			identity: configuration.identity
 				? isly.union(...configuration.identity.map(identity => identity.type))
 				: (isly.undefined() as unknown as isly.Type<I>),
-			body: configuration.body ?? (isly.undefined() as isly.Type<B>),
+			body: configuration.body ?? (isly.undefined() as isly.Type<B>)
 		})
 	}
 }

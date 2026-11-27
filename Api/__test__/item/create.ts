@@ -12,19 +12,11 @@ api.add({
 	path: "/item",
 	request: {
 		identity: Context.Identity.getConfigurations(["bearer"], { item: { write: true } }),
-		body: model.Item.Creatable.type,
+		body: model.Item.Creatable.type
 	},
 	async execute(request, context: Context) {
 		const result = context.items.create(request.body)
-		return result
-			? {
-					status: 201,
-					body: result,
-			  }
-			: gracely.server.databaseFailure()
+		return result ? { status: 201, body: result } : gracely.server.databaseFailure()
 	},
-	response: {
-		status: isly.number("value", 201),
-		body: model.Item.type,
-	},
+	response: { status: isly.number("value", 201), body: model.Item.type }
 })

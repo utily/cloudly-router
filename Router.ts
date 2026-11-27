@@ -14,7 +14,7 @@ export class Router<T extends object> {
 			allowHeaders: ["contentType", "authorization"],
 			middleware: http.Middleware.create("server"),
 			catch: false,
-			...options,
+			...options
 		}
 	}
 	add(
@@ -40,14 +40,13 @@ export class Router<T extends object> {
 									header: { accessControlAllowOrigin: allowOrigin },
 									type: "unknown error",
 									error: "exception",
-									description: (typeof error == "object" && error && error.toString()) || undefined,
+									description: (typeof error == "object" && error && error.toString()) || undefined
 								},
 								"application/json; charset=utf-8"
-						  )
+							)
 				)
 			}
-		else
-			result = await process()
+		else result = await process()
 		return result
 	}
 	async handle(
@@ -77,42 +76,35 @@ export class Router<T extends object> {
 				? await this.catch(
 						() => match[1].handle(match[0], typeof context == "function" ? context(match[0]) : context),
 						allowOrigin
-				  )
+					)
 				: matches.length == 0
-				? (await fallback?.notFound(request, typeof context == "function" ? context(request) : context)) ??
-				  http.Response.create({ status: 404 })
-				: request.method == "OPTIONS"
-				? http.Response.create({
-						status: 204,
-						header: {
-							accessControlAllowMethods: matches.flatMap(([_, r]) => r.methods),
-							accessControlAllowHeaders: this.options.allowHeaders.map(http.Request.Header.Name.to),
-						},
-				  })
-				: http.Response.create({ status: 405, header: { allow: matches.flatMap(([_, r]) => r.methods) } })
-			result = {
-				...result,
-				header: {
-					...result.header,
-					accessControlAllowOrigin: allowOrigin,
-				},
-			}
+					? ((await fallback?.notFound(request, typeof context == "function" ? context(request) : context))
+						?? http.Response.create({ status: 404 }))
+					: request.method == "OPTIONS"
+						? http.Response.create({
+								status: 204,
+								header: {
+									accessControlAllowMethods: matches.flatMap(([_, r]) => r.methods),
+									accessControlAllowHeaders: this.options.allowHeaders.map(http.Request.Header.Name.to)
+								}
+							})
+						: http.Response.create({ status: 405, header: { allow: matches.flatMap(([_, r]) => r.methods) } })
+			result = { ...result, header: { ...result.header, accessControlAllowOrigin: allowOrigin } }
 		} else if (request instanceof Request)
 			result = await http.Response.to(
 				await this.handle(await http.Request.from(request, "none"), context, fallback),
 				"none"
 			)
-		else
-			result = await this.handle(http.Request.create(request), context, fallback)
+		else result = await this.handle(http.Request.create(request), context, fallback)
 		return result
 	}
 
 	private getOrigin(request: http.Request): string | undefined {
 		return this.options.origin.some(
 			origin =>
-				origin == "*" ||
-				(typeof origin != "string" && origin.test(request.url.origin)) ||
-				origin == request.header.origin
+				origin == "*"
+				|| (typeof origin != "string" && origin.test(request.url.origin))
+				|| origin == request.header.origin
 		)
 			? request.header.origin
 			: undefined
@@ -120,9 +112,7 @@ export class Router<T extends object> {
 }
 
 export namespace Router {
-	export type Fallback<T = unknown> = {
-		notFound: (request: http.Request, context: T) => Promise<http.Response>
-	}
+	export type Fallback<T = unknown> = { notFound: (request: http.Request, context: T) => Promise<http.Response> }
 	export type Schedule<T> = RouterSchedule<T>
 	export namespace Schedule {
 		export const Event = RouterSchedule.Event

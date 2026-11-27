@@ -3,18 +3,21 @@ import { Api } from "../../../index"
 import { Permissions } from "./Permissions"
 
 export class Identity implements Api.Identity {
-	constructor(readonly id: string, readonly permissions: Permissions) {}
+	constructor(
+		readonly id: string,
+		readonly permissions: Permissions
+	) {}
 	permitted(permissions: Permissions): boolean {
 		// TODO: do something more meaningful here
 		return !!(
-			(permissions.item == true ||
-				(permissions.item &&
-					permissions.item.read == true &&
-					(this.permissions.item == true || this.permissions.item?.read))) &&
-			(permissions.version == true ||
-				(permissions.version &&
-					permissions.version.admin == true &&
-					(this.permissions.version == true || this.permissions.version?.admin)))
+			(permissions.item == true
+				|| (permissions.item
+					&& permissions.item.read == true
+					&& (this.permissions.item == true || this.permissions.item?.read)))
+			&& (permissions.version == true
+				|| (permissions.version
+					&& permissions.version.admin == true
+					&& (this.permissions.version == true || this.permissions.version?.admin)))
 		)
 	}
 	static getConfigurations(
@@ -32,33 +35,33 @@ export namespace Identity {
 			description: "",
 			header: {
 				name: "Authorization",
-				type: isly.string().rename("Admin authentication").describe("Admin authentication"),
+				type: isly.string().rename("Admin authentication").describe("Admin authentication")
 			},
 			authenticate: async (token: string): Promise<Identity | undefined> =>
 				token ? new Identity(token, {}) : undefined,
-			type: Identity.type,
+			type: Identity.type
 		},
 		basic: {
 			name: "",
 			description: "",
 			header: {
 				name: "Authorization",
-				type: isly.string().rename("Basic Authorization").describe("Basic login using username and password."),
+				type: isly.string().rename("Basic Authorization").describe("Basic login using username and password.")
 			},
 			authenticate: async (token: string): Promise<Identity | undefined> =>
 				token ? new Identity(token, {}) : undefined,
-			type: Identity.type,
+			type: Identity.type
 		},
 		bearer: {
 			name: "",
 			description: "",
 			header: {
 				name: "Authorization",
-				type: isly.string().rename("Bearer Authorization").describe("Bearer authentication for API access."),
+				type: isly.string().rename("Bearer Authorization").describe("Bearer authentication for API access.")
 			},
 			authenticate: async (token: string): Promise<Identity | undefined> =>
 				token ? new Identity(token, {}) : undefined,
-			type: Identity.type,
+			type: Identity.type
 		},
 		public: {
 			name: "",
@@ -66,7 +69,7 @@ export namespace Identity {
 			header: { name: "Authorization", type: isly.string().describe("Bearer authentication for API access.") },
 			authenticate: async (token: string): Promise<Identity | undefined> =>
 				token ? new Identity(token, {}) : undefined,
-			type: Identity.type,
-		},
+			type: Identity.type
+		}
 	}
 }

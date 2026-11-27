@@ -10,8 +10,6 @@ export interface MediaType {
 }
 export namespace MediaType {
 	export function from(response: isly.Definition): MediaType {
-		return {
-			schema: Reference.from(response),
-		}
+		return { schema: Reference.from(response) }
 	}
 }

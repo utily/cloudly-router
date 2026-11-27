@@ -8,7 +8,7 @@ describe("router.Api", () => {
 			new Request("https://example.com/resource", {
 				method: "POST",
 				body: JSON.stringify([1, 2, 3]),
-				headers: { "content-type": "application/json" },
+				headers: { "content-type": "application/json" }
 			}),
 			context
 		)
@@ -26,7 +26,7 @@ describe("router.Api", () => {
 			new Request("https://example.com/resource", {
 				method: "POST",
 				body: JSON.stringify([1, 2, "3"]),
-				headers: { "content-type": "application/json" },
+				headers: { "content-type": "application/json" }
 			}),
 			context
 		)
@@ -51,9 +51,7 @@ describe("router.Api", () => {
 	})
 })
 
-type Context = {
-	id: string
-}
+type Context = { id: string }
 const context: Context = { id: "test" }
 const api = router.Api.create<Context>({}, { name: "Test server", description: "This is a test api." })
 api.add({
@@ -61,15 +59,9 @@ api.add({
 	description: "",
 	path: "/resource",
 	method: "POST",
-	request: {
-		body: isly.number().array(),
-	},
-	response: {
-		body: isly.number().array(),
-		header: { test: isly.string() },
-		status: isly.number("value", 201),
-	},
+	request: { body: isly.number().array() },
+	response: { body: isly.number().array(), header: { test: isly.string() }, status: isly.number("value", 201) },
 	execute: (request, context: Context) => {
 		return { body: request.body, header: { test: "success" }, status: 201 }
-	},
+	}
 })

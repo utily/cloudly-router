@@ -32,17 +32,17 @@ export namespace Schema {
 		boolean: (type: isly.Boolean.Definition): Schema => ({
 			type: type.class,
 			description: type.description,
-			enum: type.condition?.flatMap(condition => convertCondition(condition)),
+			enum: type.condition?.flatMap(condition => convertCondition(condition))
 		}),
 		number: (type: isly.Number.Definition): Schema => ({
 			type: type.class,
 			description: type.description,
-			enum: type.condition?.flatMap(condition => convertCondition(condition)),
+			enum: type.condition?.flatMap(condition => convertCondition(condition))
 		}),
 		string: (type: isly.String.Definition): Schema => ({
 			type: type.class,
 			description: type.description,
-			enum: type.condition?.flatMap(condition => convertCondition(condition)),
+			enum: type.condition?.flatMap(condition => convertCondition(condition))
 		}),
 		object: (type: isly.Object.Definition, transformer): Schema => ({
 			type: type.class,
@@ -51,35 +51,35 @@ export namespace Schema {
 				(r, [key, value]) => ({ ...r, [key]: transformer.transform(value) }),
 				{}
 			),
-			required: Object.entries(type.properties).flatMap(([key, value]) => (value.class === "optional" ? [] : key)),
+			required: Object.entries(type.properties).flatMap(([key, value]) => (value.class === "optional" ? [] : key))
 		}),
 		array: (type: isly.Array.Definition, transformer): Schema => ({
 			type: type.class,
 			description: type.description,
-			items: transformer.transform(type.base),
+			items: transformer.transform(type.base)
 		}),
 		tuple: (type: isly.Tuple.Definition, transformer): Schema | undefined => ({
 			type: "array",
 			description: type.description,
 			oneOf: type.base.flatMap(t => transformer.transform(t) ?? []),
 			minItems: type.base.length,
-			maxItems: type.base.length,
+			maxItems: type.base.length
 		}),
 		union: (type: isly.Union.Definition, transformer): Schema | undefined => ({
-			oneOf: type.base.flatMap(t => transformer.transform(t) ?? []),
+			oneOf: type.base.flatMap(t => transformer.transform(t) ?? [])
 		}),
 		optional: (type: isly.Optional.Definition, transformer): Schema | undefined =>
 			transformer.transform({
 				...type.base,
 				description: type.description ?? type.base.description,
-				name: type.name ?? type.base.name,
+				name: type.name ?? type.base.name
 			}),
 		readonly: (type: isly.Readonly.Definition, transformer): Schema | undefined =>
 			transformer.transform({
 				...type.base,
 				description: type.description ?? type.base.description,
-				name: type.name ?? type.base.name,
-			}),
+				name: type.name ?? type.base.name
+			})
 	})
 	export function from(definition: isly.Definition | undefined): Schema | undefined {
 		return definition && transformer.transform(definition)

@@ -27,10 +27,7 @@ export namespace OpenApi {
 			method: "GET",
 			request: {},
 			execute: () => ({ status: 200, body: OpenApi.from(api, version) }),
-			response: {
-				status: isly.number("value", 200),
-				body: isly.any(),
-			},
+			response: { status: isly.number("value", 200), body: isly.any() }
 		}
 	}
 	export function from(api: Api<any>, version: string): OpenApi {
@@ -41,7 +38,7 @@ export namespace OpenApi {
 			openapi: "3.0.4",
 			paths: Paths.from(endpoints),
 			components: Components.from(endpoints),
-			tags: Tag.from(api.definition.tags),
+			tags: Tag.from(api.definition.tags)
 		}
 	}
 }

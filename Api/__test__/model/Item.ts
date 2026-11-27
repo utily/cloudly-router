@@ -9,15 +9,7 @@ export namespace Item {
 		number: number
 	}
 	export namespace Creatable {
-		export const { type, is, flawed } = isly
-			.object<Creatable>({
-				number: isly.number(),
-			})
-			.bind()
+		export const { type, is, flawed } = isly.object<Creatable>({ number: isly.number() }).bind()
 	}
-	export const { type, is, flawed } = Creatable.type
-		.extend<Item>({
-			id: Identifier.type,
-		})
-		.bind()
+	export const { type, is, flawed } = Creatable.type.extend<Item>({ id: Identifier.type }).bind()
 }

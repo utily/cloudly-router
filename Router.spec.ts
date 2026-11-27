@@ -7,7 +7,7 @@ describe("Router", () => {
 		router.add("GET", "/test", async (request: http.Request) => request.url.pathname)
 		expect(router).toMatchObject({
 			options: { origin: ["*"] },
-			routes: [{ pattern: { pathname: "/test" }, methods: ["GET"] }],
+			routes: [{ pattern: { pathname: "/test" }, methods: ["GET"] }]
 		})
 	})
 	it("handle", async () => {
@@ -16,7 +16,7 @@ describe("Router", () => {
 		expect(await router.handle(http.Request.create("https://example.com/test"), {})).toEqual({
 			body: "/test",
 			header: { contentType: "text/plain; charset=utf-8" },
-			status: 200,
+			status: 200
 		})
 	})
 	it("handle global request", async () => {
@@ -30,7 +30,7 @@ describe("Router", () => {
 		).headers
 		expect({
 			"access-control-allow-origin": headers.get("access-control-allow-origin"),
-			"content-type": headers.get("content-type"),
+			"content-type": headers.get("content-type")
 		}).toEqual({ "access-control-allow-origin": "http://origin:42", "content-type": "text/plain; charset=utf-8" })
 	})
 	it("handle exception", async () => {
@@ -46,7 +46,7 @@ describe("Router", () => {
 		).headers
 		expect({
 			"access-control-allow-origin": headers.get("access-control-allow-origin"),
-			"content-type": headers.get("content-type"),
+			"content-type": headers.get("content-type")
 		}).toEqual({ "access-control-allow-origin": "http://origin:42", "content-type": "application/json; charset=utf-8" })
 	})
 
@@ -58,7 +58,7 @@ describe("Router", () => {
 				http.Request.create({
 					method: "OPTIONS",
 					url: "https://example.com/test",
-					header: { origin: "http://origin:42" },
+					header: { origin: "http://origin:42" }
 				}),
 				{}
 			)
@@ -68,9 +68,9 @@ describe("Router", () => {
 				accessControlAllowHeaders: ["Content-Type", "Authorization"],
 				accessControlAllowMethods: ["GET"],
 				accessControlAllowOrigin: "http://origin:42",
-				contentType: undefined,
+				contentType: undefined
 			},
-			status: 204,
+			status: 204
 		})
 	})
 	it("alternate prefix", async () => {
@@ -79,7 +79,7 @@ describe("Router", () => {
 		expect(await router.handle(http.Request.create("https://example.com/api/test"), {})).toEqual({
 			status: 200,
 			header: { contentType: "text/plain; charset=utf-8" },
-			body: "/api/test",
+			body: "/api/test"
 		})
 	})
 	it("custom allow headers on options", async () => {
@@ -90,7 +90,7 @@ describe("Router", () => {
 				http.Request.create({
 					method: "OPTIONS",
 					url: "https://example.com/test",
-					header: { origin: "http://origin:42" },
+					header: { origin: "http://origin:42" }
 				}),
 				{}
 			)
@@ -99,8 +99,8 @@ describe("Router", () => {
 			header: {
 				accessControlAllowMethods: ["POST"],
 				accessControlAllowOrigin: "http://origin:42",
-				accessControlAllowHeaders: ["Content-Type", "Authorization", "X-Auth-Token"],
-			},
+				accessControlAllowHeaders: ["Content-Type", "Authorization", "X-Auth-Token"]
+			}
 		})
 	})
 	it("fallback", async () => {
@@ -113,21 +113,21 @@ describe("Router", () => {
 						status: 404,
 						body: {
 							error: `No endpoint found with url "${request.url}"`,
-							description: `Please use url "${request.url.origin}/test" and method "POST"`,
-						},
+							description: `Please use url "${request.url.origin}/test" and method "POST"`
+						}
 					},
 					"application/json; charset=utf-8"
-				),
+				)
 		}
 		expect(
 			await router.handle(http.Request.create({ method: "OPTIONS", url: "https://example.com/notFound" }), {}, notFound)
 		).toEqual({
 			body: {
 				description: 'Please use url "https://example.com/test" and method "POST"',
-				error: 'No endpoint found with url "https://example.com/notFound"',
+				error: 'No endpoint found with url "https://example.com/notFound"'
 			},
 			header: { accessControlAllowOrigin: undefined, contentType: "application/json; charset=utf-8" },
-			status: 404,
+			status: 404
 		})
 	})
 	it("caught error", async () => {
@@ -156,7 +156,7 @@ describe("Router", () => {
 		const router = new Router({
 			catch: true,
 			alternatePrefix: [],
-			allowHeaders: ["contentType", "authorization", "organization", "account", "realm", "cursor", "limit"],
+			allowHeaders: ["contentType", "authorization", "organization", "account", "realm", "cursor", "limit"]
 		})
 		router.add("GET", "/test", async (request: http.Request) => undefined)
 		expect(await (await router.handle(new Request("https://example.com/test", { method: "GET" }), {})).text()).toEqual(

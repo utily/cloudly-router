@@ -32,7 +32,7 @@ describe("Route", () => {
 		expect(route.match(request)).toEqual({
 			...request,
 			parameter: { id: "someid", trailingPath: "path/to/something" },
-			search: { testquery: "value" },
+			search: { testquery: "value" }
 		})
 		const request2 = http.Request.create("https://example.com/test/someid/?testquery=value")
 		expect(route.match(request2)).toEqual(undefined)
@@ -45,7 +45,7 @@ describe("Route", () => {
 		expect(route.match(request)).toEqual({
 			...request,
 			parameter: { "0": "path/to/something", id: "someid" },
-			search: { testquery: "value" },
+			search: { testquery: "value" }
 		})
 	})
 })

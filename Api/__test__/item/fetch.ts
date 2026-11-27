@@ -12,19 +12,11 @@ api.add({
 	path: "/item/:id",
 	request: {
 		parameter: { id: isly.string().rename("id").describe("Identifier of item to fetch.") },
-		identity: Context.Identity.getConfigurations(["bearer"], { item: { read: true } }),
+		identity: Context.Identity.getConfigurations(["bearer"], { item: { read: true } })
 	},
 	async execute(request, context: Context) {
 		const result = context.items.fetch(request.parameter.id)
-		return result
-			? {
-					status: 200,
-					body: result,
-			  }
-			: gracely.client.notFound()
+		return result ? { status: 200, body: result } : gracely.client.notFound()
 	},
-	response: {
-		status: isly.number("value", 200),
-		body: model.Item.type,
-	},
+	response: { status: isly.number("value", 200), body: model.Item.type }
 })

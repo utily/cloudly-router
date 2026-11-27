@@ -1,0 +1,16 @@
+{
+	"extends": "./tsconfig.json",
+	"compilerOptions": {
+		"noEmit": false,
+		"outDir": "./dist",
+		"rootDir": ".",
+		"declaration": true,
+		"declarationDir": "./dist/types",
+		"declarationMap": true,
+		"sourceMap": true,
+		"inlineSources": true,
+		"types": []
+	},
+	"exclude": ["**/*.spec.ts", "**/__test__/**", "coverage", "dist", "node_modules", "vite.config.ts"],
+	"files": ["index.ts"]
+}

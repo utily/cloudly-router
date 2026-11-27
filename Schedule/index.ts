@@ -2,11 +2,7 @@ import { Event as ScheduleEvent } from "./Event"
 import { Handler as ScheduleExecutor } from "./Handler"
 import { TimeSlot as ScheduleTimeSlot } from "./TimeSlot"
 
-type Action<T> = {
-	cron: string[]
-	timetable: Schedule.Timetable
-	handle: ScheduleExecutor<T>
-}
+type Action<T> = { cron: string[]; timetable: Schedule.Timetable; handle: ScheduleExecutor<T> }
 
 export class Schedule<T> {
 	private readonly actions: Action<T>[] = []

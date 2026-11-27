@@ -21,7 +21,7 @@ export namespace Definition {
 			method: endpoint.method,
 			request: Request.Definition.from(endpoint.request),
 			response: Response.Definition.from(endpoint.response),
-			tags: endpoint.tags,
+			tags: endpoint.tags
 		}
 	}
 }

@@ -1,27 +1,39 @@
 {
-    // See https://go.microsoft.com/fwlink/?LinkId=733558
-    // for the documentation about the tasks.json format
-    "version": "2.0.0",
-    "tasks": [
-			{
-				"label": "build",
-				"type": "npm",
-				"script": "build",
-				"group": {
-					"kind": "build",
-					"isDefault": true
-				},
-				"problemMatcher": [
-					"$eslint-compact",
-					"$tsc"
-				]
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "build",
+			"type": "npm",
+			"script": "build",
+			"group": {
+				"kind": "build",
+				"isDefault": true
 			},
-			{
-				"type": "npm",
-				"script": "lint",
-				"problemMatcher": [
-					"$eslint-compact"
-				]
-			}
-		]
+			"problemMatcher": ["$tsc"]
+		},
+		{
+			"type": "npm",
+			"script": "lint"
+		},
+		{
+			"label": "format",
+			"type": "npm",
+			"script": "format"
+		},
+		{
+			"label": "test",
+			"type": "npm",
+			"script": "test"
+		},
+		{
+			"label": "coverage",
+			"type": "npm",
+			"script": "coverage"
+		},
+		{
+			"label": "clean",
+			"type": "npm",
+			"script": "clean"
+		}
+	]
 }

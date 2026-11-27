@@ -21,7 +21,7 @@ interface Food {
 const food = isly
 	.object<Food>({
 		name: isly.string().rename("Name").describe("The food's name."),
-		for: isly.string("value", ["Dog", "Cat"]).array().rename("For").describe("The animals the food is for."),
+		for: isly.string("value", ["Dog", "Cat"]).array().rename("For").describe("The animals the food is for.")
 	})
 	.rename("Food")
 	.describe("A food.")
@@ -37,7 +37,7 @@ const pet = isly
 			)
 			.rename("testTuple")
 			.describe("Description of test tuple."),
-		foods: food.array().rename("Foods").describe("The pet's favorite foods."),
+		foods: food.array().rename("Foods").describe("The pet's favorite foods.")
 	})
 	.rename("Pet")
 	.describe("A pet.")
@@ -46,7 +46,7 @@ const api = router.Api.create<object>(
 	{
 		name: "Pet Store",
 		description: "Api documentation for the pet store",
-		tags: [{ name: "Pet", description: "Endpoints to handle pets." }],
+		tags: [{ name: "Pet", description: "Endpoints to handle pets." }]
 	}
 )
 api.add(router.OpenApi.endpoint(api, "/help", "v1"))
@@ -56,18 +56,15 @@ api.add({
 	tags: ["Pet"],
 	path: "/pet",
 	method: "POST",
-	request: {
-		header: { test: isly.string().rename("test").describe("An example request header.") },
-		body: pet,
-	},
+	request: { header: { test: isly.string().rename("test").describe("An example request header.") }, body: pet },
 	response: {
 		status: isly.number("value", 201).describe("Pet created"),
 		header: { test: isly.string().rename("test").describe("An example response header.") },
-		body: pet,
+		body: pet
 	},
 	execute: (request, context: object) => {
 		return { status: 201, header: { test: "success" }, body: request.body }
-	},
+	}
 })
 api.add({
 	title: "List Pets",
@@ -76,13 +73,10 @@ api.add({
 	path: "/pet",
 	method: "GET",
 	request: {},
-	response: {
-		status: isly.number("value", 200).describe("Pets listed"),
-		body: pet,
-	},
+	response: { status: isly.number("value", 200).describe("Pets listed"), body: pet },
 	execute: (request, context) => {
 		return { status: 200, body: { name: "Egon Husk", breed: "Dog", age: 2 } }
-	},
+	}
 })
 api.add({
 	title: "Fetch a single Pet",
@@ -91,13 +85,10 @@ api.add({
 	path: "/pet/:id",
 	method: "GET",
 	request: { parameter: { id: isly.string().rename("id").describe("The pet's id") } },
-	response: {
-		status: isly.number("value", 200),
-		body: pet,
-	},
+	response: { status: isly.number("value", 200), body: pet },
 	execute: (request, context) => {
 		return { status: 200, body: { name: "Egon Husk", breed: "Dog", age: 2 } }
-	},
+	}
 })
 api.add({
 	title: "List Food",
@@ -108,15 +99,15 @@ api.add({
 	request: {},
 	response: {
 		status: isly.number("value", 200).describe("Food listed"),
-		body: food.array().rename("Foods").describe("List of foods"),
+		body: food.array().rename("Foods").describe("List of foods")
 	},
 	execute: (request, context) => {
 		return {
 			status: 200,
 			body: [
 				{ name: "Formula 1", for: "Dog" },
-				{ name: "Flight Fuel", for: ["Pigeon", "Parrot"] },
-			],
+				{ name: "Flight Fuel", for: ["Pigeon", "Parrot"] }
+			]
 		}
-	},
+	}
 })

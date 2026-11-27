@@ -13,7 +13,7 @@ api.add({
 	request: {
 		parameter: { id: isly.string().rename("id").describe("Identifier of item to change.") },
 		identity: Context.Identity.getConfigurations(["bearer"], { item: { write: true } }),
-		body: model.Item.type.partial(),
+		body: model.Item.type.partial()
 	},
 	async execute(request, context: Context) {
 		const before = context.items.fetch(request.parameter.id)
@@ -21,11 +21,8 @@ api.add({
 		return result
 			? { status: 200, body: result }
 			: before
-			? gracely.server.databaseFailure()
-			: gracely.client.notFound()
+				? gracely.server.databaseFailure()
+				: gracely.client.notFound()
 	},
-	response: {
-		status: isly.number("value", 200),
-		body: model.Item.type,
-	},
+	response: { status: isly.number("value", 200), body: model.Item.type }
 })

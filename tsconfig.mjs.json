@@ -3,7 +3,5 @@
 	"compilerOptions": {
 		"types": []
 	},
-	"exclude": [
-		"**/*.spec.ts"
-	]
+	"exclude": ["**/*.spec.ts", "**/__test__/**", "coverage", "dist", "node_modules", "vite.config.ts"]
 }

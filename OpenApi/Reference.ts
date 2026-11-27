@@ -7,8 +7,6 @@ export interface Reference {
 }
 export namespace Reference {
 	export function from(value: isly.Definition): Reference {
-		return {
-			$ref: `#/components/schemas/${value.name}`,
-		}
+		return { $ref: `#/components/schemas/${value.name}` }
 	}
 }

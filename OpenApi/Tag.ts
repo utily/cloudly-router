@@ -11,9 +11,6 @@ export namespace Tag {
 		url: string
 	}
 	export function from(collections: Api.Definition.Tag[] | undefined): Tag[] | undefined {
-		return collections?.map(collection => ({
-			description: collection.description,
-			name: collection.name,
-		}))
+		return collections?.map(collection => ({ description: collection.description, name: collection.name }))
 	}
 }

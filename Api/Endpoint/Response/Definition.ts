@@ -15,7 +15,7 @@ export namespace Definition {
 				response.header ?? {},
 				([name, type]) => [name, type.definition] as const
 			),
-			body: (response.body ?? isly.undefined()).definition,
+			body: (response.body ?? isly.undefined()).definition
 		}
 	}
 }

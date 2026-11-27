@@ -9,10 +9,6 @@ export interface Info {
 }
 export namespace Info {
 	export function from(api: Api.Definition, version: string): Info {
-		return {
-			description: api.description,
-			title: api.name,
-			version,
-		}
+		return { description: api.description, title: api.name, version }
 	}
 }

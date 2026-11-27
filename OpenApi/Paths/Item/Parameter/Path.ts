@@ -13,7 +13,7 @@ export namespace Path {
 			description: value.description,
 			name: key,
 			schema: Schema.from(value),
-			required: true,
+			required: true
 		}))
 	}
 }

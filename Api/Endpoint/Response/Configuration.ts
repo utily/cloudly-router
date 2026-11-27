@@ -20,7 +20,7 @@ export namespace Configuration {
 		return isly.object<Response<H, B>>({
 			status: configuration.status,
 			header: isly.object(configuration.header ?? ({} as H)),
-			body: configuration.body ?? (isly.undefined() as isly.Type<B>),
+			body: configuration.body ?? (isly.undefined() as isly.Type<B>)
 		})
 	}
 }

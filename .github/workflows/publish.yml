@@ -1,34 +1,37 @@
-name: "Publish"
-
+name: Publish
+permissions:
+  contents: write
+  id-token: write
 on:
   push:
-    tags:
-      - "release-*"
-permissions:
-  contents: read
-  id-token: write   # Required for OIDC
+    branches:
+      - master
+concurrency:
+  group: publish-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
 jobs:
   publish:
-    name: "Publish"
-    timeout-minutes: 60
+    name: Publish package
     runs-on: ubuntu-latest
     steps:
-      - name: "Checkout source code"
-        uses: actions/checkout@v5
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: 24
-      - name: Install
-        run: npm ci
-      - name: Build
+          node-version: lts/*
+          package-manager-cache: false
+      - name: Install dependencies
+        run: npm clean-install
+      - name: Verify dependency signatures
+        run: npm audit signatures
+      - name: Build package
         run: npm run build
-      - name: Publish
-        run: |
-          VERSION=$(node -p "require('./package.json').version")
-          if [[ "$VERSION" == *-* ]]; then
-            npm publish --access public --tag prerelease
-          else
-            npm publish --access public
-          fi
-        shell: bash
+      - name: Check npm version
+        run: npm --version
+      - name: Release with semantic-release
+        run: npx semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
