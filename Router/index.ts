@@ -1,7 +1,7 @@
 import { http } from "cloudly-http"
-import { Handler } from "./Handler"
-import { Route } from "./Route"
-import { Schedule as RouterSchedule } from "./Schedule"
+import { Handler } from "../Handler"
+import { Route } from "../Route"
+import { Schedule as RouterSchedule } from "../Schedule"
 
 export class Router<T extends object> {
 	private readonly routes: Route<T>[] = []

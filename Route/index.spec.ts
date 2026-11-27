@@ -1,5 +1,5 @@
 import { http } from "cloudly-http"
-import { Route } from "./Route"
+import { Route } from "../Route"
 
 describe("Route", () => {
 	it("create", () => {

@@ -1,6 +1,6 @@
 import "urlpattern-polyfill"
 import { http } from "cloudly-http"
-import { Handler } from "./Handler"
+import { Handler } from "../Handler"
 
 export class Route<T> {
 	private constructor(
