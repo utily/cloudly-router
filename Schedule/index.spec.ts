@@ -14,13 +14,13 @@ const events = [
 	{ name: "fifth", scheduledTime: scheduledTimeFirst, cron: "* * * * *" }
 ]
 
-describe.each(events)("scheduled", (event: (typeof events)[number]) => {
-	const router = new Router()
-	const firstHandler = vitest.fn(async () => undefined)
-	const secondHandler = vitest.fn(async () => undefined)
-	router.schedule.add([cron], { hours: [14, [4, 6]] }, firstHandler)
-	router.schedule.add([cron], { hours: [3, 5] }, secondHandler)
-	it(`${event.name} event`, async () => {
+describe("scheduled", () => {
+	it.each(events)("$name event", async event => {
+		const router = new Router()
+		const firstHandler = vitest.fn(async () => undefined)
+		const secondHandler = vitest.fn(async () => undefined)
+		router.schedule.add([cron], { hours: [14, [4, 6]] }, firstHandler)
+		router.schedule.add([cron], { hours: [3, 5] }, secondHandler)
 		await router.schedule.handle(event, {})
 		expect(firstHandler).toBeCalledTimes(event.expect?.firstCalls ?? 0)
 		expect(secondHandler).toBeCalledTimes(event.expect?.secondCalls ?? 0)

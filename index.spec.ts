@@ -6,18 +6,13 @@ describe("cloud-router", () => {
 		const router = new Router()
 		expect(router).toMatchObject({})
 	})
-	it("context as object", async () => {
+	it.each([
+		{ name: "object", context: {} },
+		{ name: "factory", context: (request: http.Request.Like) => ({ request, environment: { secret: true } }) }
+	])("handle context as $name", async ({ context }) => {
 		const request: http.Request.Like = { url: new URL("http://localhost") }
-		const router = new Router<object>({ catch: true })
-		const result = await router.handle(request, {})
-		expect(result).toMatchObject({ status: 404 })
-	})
-	it("context as factory", async () => {
-		type Context = { request: http.Request.Like; environment: Record<string, unknown> }
-		const environment = { secret: true }
-		const request: http.Request.Like = { url: new URL("http://localhost") }
-		const router = new Router<Context>({ catch: true })
-		const result = await router.handle(request, request => ({ request, environment }))
+		const router = new Router({ catch: true })
+		const result = await router.handle(request, context)
 		expect(result).toMatchObject({ status: 404 })
 	})
 	it("add route", () => {

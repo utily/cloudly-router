@@ -2,6 +2,36 @@ import { isly } from "isly"
 import * as router from "../index"
 
 describe("OpenApi", () => {
+	it("converts schema variants and query parameters", () => {
+		const schemaApi = router.Api.create({})
+		schemaApi.add({
+			title: "Schema variants",
+			description: "",
+			path: "/schema",
+			method: "GET",
+			request: {
+				search: {
+					flag: isly.boolean().optional(),
+					choice: isly.union(isly.string(), isly.number()),
+					fixed: isly.string().readonly()
+				}
+			},
+			response: {
+				status: isly.number("value", 200),
+				body: isly.object({ enabled: isly.boolean(), values: isly.tuple(isly.string(), isly.number()).optional() })
+			},
+			execute: () => ({ status: 200, body: { enabled: true } })
+		})
+		const document = router.OpenApi.from(schemaApi, "v1")
+		expect(document.paths["/schema"].get?.parameters).toEqual([
+			expect.objectContaining({ name: "flag", in: "query", required: true }),
+			expect.objectContaining({ name: "choice", in: "query", required: true }),
+			expect.objectContaining({ name: "fixed", in: "query", required: true })
+		])
+		expect(JSON.stringify(document)).toContain('"oneOf"')
+		expect(JSON.stringify(document)).toContain('"type":"boolean"')
+		expect(JSON.stringify(document)).toContain('"type":"array"')
+	})
 	it("from", () => {
 		expect(JSON.stringify(router.OpenApi.from(api, "v1"))).toMatchInlineSnapshot(
 			`"{"info":{"description":"Api documentation for the pet store","title":"Pet Store","version":"v1"},"openapi":"3.0.4","paths":{"/pet":{"post":{"description":"Adds a new pet","summary":"Create Pet","parameters":[{"in":"header","description":"An example request header.","name":"test","schema":{"type":"string","description":"An example request header."},"required":true}],"requestBody":{"content":{"application/json":{"schema":{"$ref":"#/components/schemas/Pet"}}}},"responses":{"201":{"content":{"application/json":{"schema":{"$ref":"#/components/schemas/Pet"}}},"description":"Pet created","headers":{"test":{"description":"An example response header.","schema":{"type":"string","description":"An example response header."},"required":true}}}},"tags":["Pet"]},"get":{"description":"Returns a list of pets","summary":"List Pets","parameters":[],"responses":{"200":{"content":{"application/json":{"schema":{"$ref":"#/components/schemas/Pet"}}},"description":"Pets listed","headers":{}}},"tags":["Pet"]}},"/pet/{id}":{"get":{"description":"Returns a single pet","summary":"Fetch a single Pet","parameters":[{"in":"path","description":"The pet's id","name":"id","schema":{"type":"string","description":"The pet's id"},"required":true}],"responses":{"200":{"content":{"application/json":{"schema":{"$ref":"#/components/schemas/Pet"}}},"description":"","headers":{}}},"tags":["Pet"]}},"/food":{"get":{"description":"Returns a list of foods","summary":"List Food","parameters":[],"responses":{"200":{"content":{"application/json":{"schema":{"$ref":"#/components/schemas/Foods"}}},"description":"Food listed","headers":{}}},"tags":["Food"]}}},"components":{"schemas":{"Pet":{"type":"object","description":"A pet.","properties":{"name":{"type":"string","description":"The pet's name."},"breed":{"type":"string","description":"The pet's breed."},"age":{"type":"number","description":"The pet's age."},"tuple":{"type":"array","description":"Description of test tuple.","oneOf":[{"type":"number","description":"Description of value1"},{"type":"string","description":"Description of value2"}],"minItems":2,"maxItems":2},"foods":{"type":"array","description":"The pet's favorite foods.","items":{"type":"object","description":"A food.","properties":{"name":{"type":"string","description":"The food's name."},"for":{"type":"array","description":"The animals the food is for.","items":{"type":"string","enum":["Dog","Cat"]}}},"required":["name","for"]}}},"required":["name","breed","age","tuple","foods"]},"Foods":{"type":"array","description":"List of foods","items":{"type":"object","description":"A food.","properties":{"name":{"type":"string","description":"The food's name."},"for":{"type":"array","description":"The animals the food is for.","items":{"type":"string","enum":["Dog","Cat"]}}},"required":["name","for"]}}}},"tags":[{"description":"Endpoints to handle pets.","name":"Pet"}]}"`

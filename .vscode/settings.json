@@ -40,6 +40,6 @@
 		".*": true,
 		"node_modules": true
 	},
-	"cSpell.words": ["cloudly"],
+	"cSpell.words": ["cloudly", "gracely", "isly"],
 	"ts.tsdk": "node_modules/typescript/lib"
 }

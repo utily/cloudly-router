@@ -2,6 +2,43 @@ import { http } from "cloudly-http"
 import { Router } from "../index"
 
 describe("Router", () => {
+	it("uses custom catch response", async () => {
+		const router = new Router({ catch: error => ({ status: 418, body: { message: String(error) } }) })
+		router.add("GET", "/test", async () => {
+			throw new Error("caught")
+		})
+		const response = await router.handle(http.Request.create("https://example.com/test"), {})
+		expect(response.status).toBe(418)
+		expect(JSON.parse(String(await response.body))).toEqual({ message: "Error: caught" })
+	})
+	it("rejects unsupported methods", async () => {
+		const router = new Router({ origin: [/^https:\/\/allowed\.example$/], allowHeaders: ["authorization"] })
+		router.add("GET", "/test", async () => "ok")
+		const response = await router.handle(
+			http.Request.create({
+				method: "POST",
+				url: "https://allowed.example/test",
+				header: { origin: "https://allowed.example" }
+			}),
+			{}
+		)
+		expect(response.status).toBe(405)
+		expect(response.header.allow).toEqual(["GET"])
+	})
+	it("allows exact origins and rejects others", async () => {
+		const router = new Router({ origin: ["https://allowed.example"] })
+		router.add("GET", "/test", async () => "ok")
+		const allowed = await router.handle(
+			http.Request.create({ url: "https://service.example/test", header: { origin: "https://allowed.example" } }),
+			{}
+		)
+		const denied = await router.handle(
+			http.Request.create({ url: "https://service.example/test", header: { origin: "https://denied.example" } }),
+			{}
+		)
+		expect(allowed.header.accessControlAllowOrigin).toBe("https://allowed.example")
+		expect(denied.header.accessControlAllowOrigin).toBeUndefined()
+	})
 	it("create", () => {
 		const router = new Router({ catch: false })
 		router.add("GET", "/test", async (request: http.Request) => request.url.pathname)
@@ -130,27 +167,23 @@ describe("Router", () => {
 			status: 404
 		})
 	})
-	it("caught error", async () => {
+	it.each([
+		{
+			name: "caught error",
+			handler: async () => {
+				throw new Error("Test Error")
+			},
+			expected: { description: "Error: Test Error", error: "exception", status: 500, type: "unknown error" }
+		},
+		{ name: "working endpoint", handler: async () => ({ test: "test" }), expected: { test: "test" } }
+	])("POST /test $name", async ({ handler, expected }) => {
 		const router = new Router({ allowHeaders: ["contentType", "authorization", "xAuthToken"], catch: true })
-		router.add("POST", "/test", async (request: http.Request) => {
-			throw new Error("Test Error")
-		})
+		router.add("POST", "/test", handler)
 		expect(
 			await (
 				await router.handle(new Request("https://example.com/test", { method: "POST", body: JSON.stringify({}) }), {})
 			).json()
-		).toEqual({ description: "Error: Test Error", error: "exception", status: 500, type: "unknown error" })
-	})
-	it("working endpoint", async () => {
-		const router = new Router({ allowHeaders: ["contentType", "authorization", "xAuthToken"], catch: true })
-		router.add("POST", "/test", async (request: http.Request) => {
-			return { test: "test" }
-		})
-		expect(
-			await (
-				await router.handle(new Request("https://example.com/test", { method: "POST", body: JSON.stringify({}) }), {})
-			).json()
-		).toEqual({ test: "test" })
+		).toEqual(expected)
 	})
 	it("empty body", async () => {
 		const router = new Router({
